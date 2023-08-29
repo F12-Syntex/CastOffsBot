@@ -38,7 +38,8 @@ public class Kodo extends ListenerAdapter {
             this.discord.addEventListener(this);
 
             this.commandHandler = new CommandHandler(); 
-            
+            this.commandHandler.loadCommands();
+
 
 
         } catch (Exception e) {
