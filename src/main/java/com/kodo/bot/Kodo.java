@@ -2,12 +2,9 @@ package com.kodo.bot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
@@ -30,12 +27,7 @@ public class Kodo extends ListenerAdapter{
 
         // Sets the global command list to the provided commands (removing all others)
         jda.updateCommands().addCommands(
-            Commands.slash("ping", "Calculate ping of the bot"),
-            Commands.slash("ban", "Ban a user from the server")
-                    .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.BAN_MEMBERS)) // only usable with ban permissions
-                    .setGuildOnly(true) // Ban command only works inside a guild
-                    .addOption(OptionType.USER, "user", "The user to ban", true) // required option of type user (target to ban)
-                    .addOption(OptionType.STRING, "reason", "The ban reason") // optional reason
+            Commands.slash("ping", "Calculate ping of the bot")
         ).queue();
     }
 
