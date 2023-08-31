@@ -44,6 +44,8 @@ public class CodeWars {
 
                 if(clan.isJsonNull() || !clan.getAsString().equals("UKC compSoc")) return RegisterResult.USER_NOT_IN_CLAN;
 
+                
+
                 //register the user to the system
                 return RegisterResult.USER_REGISTERED;
             }
