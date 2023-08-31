@@ -1,3 +1,5 @@
 package com.kodo.handler;
 
-public abstract class Handler {}
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+public abstract class Handler extends ListenerAdapter{}

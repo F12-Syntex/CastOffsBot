@@ -1,6 +1,13 @@
 package com.kodo.bot;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.kodo.codewars.CodeWars;
 import com.kodo.commands.CommandHandler;
+import com.kodo.handler.Dependencies;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -8,20 +15,20 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-public class Kodo extends ListenerAdapter {
+public final class Kodo extends ListenerAdapter {
 
     private JDABuilder builder;
     private JDA discord;
-
-    //TODO: move handlers to a universal handler
     private CommandHandler commandHandler;
+
+    private final Dependencies dependencies = new Dependencies();
     
     public static void main(String[] args) {
         Kodo kodo = new Kodo();
         kodo.build();
     }
 
-    public Kodo() {
+    private  Kodo() {
         String authToken = System.getenv("DISCORD_TOKEN");
         System.out.println("Token: " + authToken);
 
@@ -29,16 +36,28 @@ public class Kodo extends ListenerAdapter {
                 .disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
                 .setBulkDeleteSplittingEnabled(false)
                 .setActivity(Activity.watching("TV"));
+
+        dependencies.setBuilder(builder);
     }
 
     public void build() {
+
         try {
             
+            this.configureLogger();
+
             this.discord = this.builder.build();
             this.discord.addEventListener(this);
+            dependencies.setDiscord(discord);
 
-            this.commandHandler = new CommandHandler(); 
+            CodeWars codeWars = new CodeWars();
+            dependencies.setCodeWars(codeWars);
+
+            this.commandHandler = new CommandHandler(this.dependencies); 
             this.commandHandler.loadCommands();
+            this.commandHandler.registerCommands();
+            this.discord.addEventListener(this.commandHandler);
+            dependencies.setCommandHandler(commandHandler);
 
 
 
@@ -46,4 +65,29 @@ public class Kodo extends ListenerAdapter {
             e.printStackTrace();
         }
     }
+
+public void configureLogger() {
+    Logger logger = Logger.getGlobal();
+    
+    // Set the log level to control which logs are printed
+    logger.setLevel(Level.ALL);
+    
+    // Create a console handler to output log messages to the console
+    ConsoleHandler consoleHandler = new ConsoleHandler();
+    
+    // Create a custom formatter that prints only the class name and log message
+    Formatter formatter = new Formatter() {
+        @Override
+        public String format(java.util.logging.LogRecord record) {
+            return record.getSourceClassName() + ": " + record.getMessage() + "\n";
+        }
+    };
+    
+    // Set the custom formatter for the console handler
+    consoleHandler.setFormatter(formatter);
+    
+    // Remove any existing handlers from the logger
+    logger.setUseParentHandlers(false);
+    logger.addHandler(consoleHandler);
+}
 }

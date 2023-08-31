@@ -5,10 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.jetbrains.annotations.NotNull;
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CommandMeta {
-    String name();
-    String description();
-    String permission() default "";
+    @NotNull String name();
+    @NotNull String description();
 }
