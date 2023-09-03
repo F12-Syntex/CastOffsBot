@@ -45,9 +45,8 @@ public class Register extends Command {
 
         RegisterResult result = codeWars.registerUser(usernameString);
 
-
         if(result != RegisterResult.USER_REGISTERED) {
-            EmbedBuilder embed = EmbedMaker.ERROR(event.getUser(), "Could not register the user", result.toString());
+            EmbedBuilder embed = EmbedMaker.ERROR(event.getUser(), "Could not register the user", result.getErrorMessage());
             event.replyEmbeds(embed.build()).queue();
             return;
         }

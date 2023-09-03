@@ -30,13 +30,13 @@ public class CodeWars {
 
         String url = "https://www.codewars.com/api/v1/users/" + username;
 
-        //we use httpclient to make a get request to the url and get the response
-        //we then parse the response to a json object and check if the user exists
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet(url);
-
         try {
-            
+
+            //we use httpclient to make a get request to the url and get the response
+            //we then parse the response to a json object and check if the user exists
+            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpGet request = new HttpGet(url);
+
             //send the request
             HttpResponse response = httpClient.execute(request);
             String responseBody = EntityUtils.toString(response.getEntity());
