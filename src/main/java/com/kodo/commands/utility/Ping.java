@@ -48,6 +48,6 @@ public class Ping extends Command{
 
     @Override
     public DefaultMemberPermissions getDefaultMemberPermissions() {
-        return DefaultMemberPermissions.DISABLED;
+        return DefaultMemberPermissions.ENABLED;
     }
 }

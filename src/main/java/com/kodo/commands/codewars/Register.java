@@ -74,7 +74,7 @@ public class Register extends Command {
 
     @Override
     public DefaultMemberPermissions getDefaultMemberPermissions() {
-       return DefaultMemberPermissions.DISABLED;
+       return DefaultMemberPermissions.ENABLED;
     }
     
 }
