@@ -45,8 +45,6 @@ public class CodeWars {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
 
-            Logger.getGlobal().info(jsonObject.toString());
-
             //check if the user exists by checking if the id field exists
             if(jsonObject.has("id")){
                 //check if the user is in the clan
