@@ -13,9 +13,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.kodo.database.users.UserConfiguration;
 import com.kodo.database.users.UserStorage;
+import com.kodo.database.users.scheme.User;
 import com.kodo.handler.Dependencies;
-
-import net.dv8tion.jda.api.entities.User;
 
 public class CodeWars {
 
@@ -59,7 +58,8 @@ public class CodeWars {
                 if(userConfiguration.isRegistered(username)) return RegisterResult.USER_ALREADY_REGISTERED;
 
                 //regiser the user to the system
-                userConfiguration.registerUser(username);
+                User user = gson.fromJson(jsonObject, User.class);
+                userConfiguration.registerUser(username, user);
                 return RegisterResult.USER_REGISTERED;
             }
 
@@ -72,4 +72,15 @@ public class CodeWars {
         return RegisterResult.SERVER_ERROR;
     }
     
+    public UserConfiguration getUser(String username){
+        return this.getUserStorage().getUser(username);
+    }
+
+    public UserStorage getUserStorage() {
+        return userConfiguration;
+    }
+
+    public Dependencies getDependencies() {
+        return dependencies;
+    }
 }

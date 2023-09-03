@@ -4,17 +4,18 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.entities.User;
 
 public class EmbedMaker {
 
 private static final String codeLine = "```";
 
-public static void replyError(String notice, String error_type, @NotNull SlashCommandInteractionEvent event, boolean ephemeral) {
+@Nonnull
+public static EmbedBuilder ERROR(User user, String notice, String error_type) {
     EmbedBuilder embedBuilder = new EmbedBuilder();
     embedBuilder.setTitle("Error Notice");
     embedBuilder.setDescription(notice);
@@ -26,12 +27,22 @@ public static void replyError(String notice, String error_type, @NotNull SlashCo
         embedBuilder.addField("Error Type", codeLine + error_type + codeLine, false);
     }
 
-    embedBuilder.setFooter("User: " + event.getUser().getName() + " | ID: " + event.getUser().getId(), event.getUser().getAvatarUrl());
+    embedBuilder.setFooter("User: " + user.getName() + " | ID: " + user.getId(), user.getAvatarUrl());
     embedBuilder.setTimestamp(Instant.now());    
 
-    MessageEmbed embed = embedBuilder.build();
+    return embedBuilder;
+}
 
-    event.replyEmbeds(embed).setEphemeral(ephemeral).queue();
+@Nonnull
+public static EmbedBuilder INFO(User user, String notice) {
+    EmbedBuilder embedBuilder = new EmbedBuilder();
+    embedBuilder.setTitle("INFO");
+    embedBuilder.setDescription(notice);
+    embedBuilder.setColor(Color.green);
+    embedBuilder.setTimestamp(Instant.now());
+    embedBuilder.setFooter("User: " + user.getName() + " | ID: " + user.getId(), user.getAvatarUrl());
+
+    return embedBuilder;
 }
 
     

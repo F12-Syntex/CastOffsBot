@@ -1,14 +1,22 @@
 package com.kodo.commands.codewars;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NotNull;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kodo.codewars.CodeWars;
 import com.kodo.codewars.RegisterResult;
 import com.kodo.commands.Command;
 import com.kodo.commands.CommandMeta;
+import com.kodo.database.users.UserConfiguration;
+import com.kodo.database.users.UserProfileConfiguration;
+import com.kodo.database.users.scheme.User;
 import com.kodo.handler.Dependencies;
 import com.kodo.utils.EmbedMaker;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -27,7 +35,8 @@ public class Register extends Command {
         OptionMapping username = event.getOption("username");
 
         if(username == null) {
-            EmbedMaker.replyError("Please specify a valid usernmae", "INVALID_USERNAME", event, true);
+            EmbedBuilder embed = EmbedMaker.ERROR(event.getUser(), "Please specify a valid usernmae", "INVALID_USERNAME");
+            event.replyEmbeds(embed.build()).queue();
             return;
         }
 
@@ -36,12 +45,26 @@ public class Register extends Command {
 
         RegisterResult result = codeWars.registerUser(usernameString);
 
+
         if(result != RegisterResult.USER_REGISTERED) {
-            EmbedMaker.replyError("Could not register the user", result.toString(), event, true);
+            EmbedBuilder embed = EmbedMaker.ERROR(event.getUser(), "Could not register the user", result.toString());
+            event.replyEmbeds(embed.build()).queue();
             return;
         }
 
-        event.reply(usernameString + " has been registered to the system").setEphemeral(true).queue();
+        UserConfiguration user = codeWars.getUser(usernameString);
+        UserProfileConfiguration profile = user.getProfile();
+        EmbedBuilder embed = EmbedMaker.INFO(event.getUser(), usernameString + " has been registered to the system");
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(profile.getUser(), User.class);
+        String jsonPretty = System.lineSeparator() + json + System.lineSeparator() + "```";
+
+        if(json != null){
+            embed.addField("profile.json", "```py" + jsonPretty, false);
+        }
+
+        event.replyEmbeds(embed.build()).queue();
     }
 
     @Override
