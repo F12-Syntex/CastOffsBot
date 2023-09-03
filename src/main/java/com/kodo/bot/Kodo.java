@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import com.kodo.codewars.CodeWars;
 import com.kodo.commands.CommandHandler;
+import com.kodo.database.StorageManager;
 import com.kodo.handler.Dependencies;
 
 import net.dv8tion.jda.api.JDA;
@@ -29,6 +30,12 @@ public final class Kodo extends ListenerAdapter {
     }
 
     private  Kodo() {
+
+        //load the storage
+        StorageManager storage = new StorageManager();
+        storage.startup();
+        dependencies.setStorage(storage);
+
         String authToken = System.getenv("DISCORD_TOKEN");
         System.out.println("Token: " + authToken);
 

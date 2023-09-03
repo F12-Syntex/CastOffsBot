@@ -2,6 +2,7 @@ package com.kodo.handler;
 
 import com.kodo.codewars.CodeWars;
 import com.kodo.commands.CommandHandler;
+import com.kodo.database.StorageManager;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -12,6 +13,7 @@ public class Dependencies {
     private JDA discord;
     private CommandHandler commandHandler;
     private CodeWars codeWars;
+    private StorageManager storage;
 
     public void setBuilder(JDABuilder builder) {
         this.builder = builder;
@@ -29,6 +31,10 @@ public class Dependencies {
         this.codeWars = codeWars;
     }
 
+    public void setStorage(StorageManager storage) {
+        this.storage = storage;
+    }
+
     public JDABuilder getBuilder() {
         return builder;
     }
@@ -43,6 +49,10 @@ public class Dependencies {
 
     public CodeWars getCodeWars() {
         return codeWars;
+    }
+
+    public StorageManager getStorage() {
+        return storage;
     }
     
 }
