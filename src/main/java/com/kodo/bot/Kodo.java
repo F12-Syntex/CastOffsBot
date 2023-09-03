@@ -31,6 +31,8 @@ public final class Kodo extends ListenerAdapter {
 
     private  Kodo() {
 
+        this.configureLogger();
+
         //load the storage
         StorageManager storage = new StorageManager();
         storage.startup();
@@ -50,14 +52,12 @@ public final class Kodo extends ListenerAdapter {
     public void build() {
 
         try {
-            
-            this.configureLogger();
 
             this.discord = this.builder.build();
             this.discord.addEventListener(this);
             dependencies.setDiscord(discord);
 
-            CodeWars codeWars = new CodeWars();
+            CodeWars codeWars = new CodeWars(this.dependencies);
             dependencies.setCodeWars(codeWars);
 
             this.commandHandler = new CommandHandler(this.dependencies); 

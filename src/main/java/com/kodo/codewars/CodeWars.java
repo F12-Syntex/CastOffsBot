@@ -11,10 +11,21 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.kodo.database.users.UserConfiguration;
+import com.kodo.database.users.UserStorage;
+import com.kodo.handler.Dependencies;
+
+import net.dv8tion.jda.api.entities.User;
 
 public class CodeWars {
 
-    public CodeWars(){}
+    private final Dependencies dependencies;
+    private final UserStorage userConfiguration;
+
+    public CodeWars(Dependencies dependencies){
+        this.dependencies = dependencies;
+        this.userConfiguration = dependencies.getStorage().getUserStorage();
+    }
 
     public RegisterResult registerUser(String username){
 
@@ -43,10 +54,12 @@ public class CodeWars {
                 JsonElement clan = jsonObject.get("clan");
 
                 if(clan.isJsonNull() || !clan.getAsString().equals("UKC compSoc")) return RegisterResult.USER_NOT_IN_CLAN;
-
                 
+                //check if they have already been registered
+                if(userConfiguration.isRegistered(username)) return RegisterResult.USER_ALREADY_REGISTERED;
 
-                //register the user to the system
+                //regiser the user to the system
+                userConfiguration.registerUser(username);
                 return RegisterResult.USER_REGISTERED;
             }
 
