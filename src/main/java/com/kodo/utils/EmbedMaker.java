@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import javax.annotation.Nonnull;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 public class EmbedMaker {
