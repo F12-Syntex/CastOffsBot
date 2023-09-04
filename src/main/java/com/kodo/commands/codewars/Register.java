@@ -86,7 +86,6 @@ public class Register extends Command {
             embedBuilder.addField("Score", "`" + overall.get("score").getAsString() + "`", true);            
         }
 
-        
         Button button = Button.primary("codewars_profile", "View Profile")
             .withUrl("https://www.codewars.com/users/" + usernameString)
             .withStyle(ButtonStyle.LINK);
