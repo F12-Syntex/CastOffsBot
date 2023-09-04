@@ -23,7 +23,7 @@ public static EmbedBuilder ERROR(User user, String notice, String error_type) {
     String localTime = LocalDateTime.now().toString();
 
     if (error_type != null && !localTime.isEmpty()) {
-        embedBuilder.addField("Error Type", codeLine + error_type + codeLine, false);
+        embedBuilder.addField("Response", codeLine + error_type + codeLine, false);
     }
 
     embedBuilder.setFooter("User: " + user.getName() + " | ID: " + user.getId(), user.getAvatarUrl());
