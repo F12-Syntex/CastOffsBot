@@ -3,7 +3,9 @@ package com.kodo.commands;
 import org.jetbrains.annotations.NotNull;
 
 import com.kodo.handler.Dependencies;
+import com.kodo.utils.EmbedMaker;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -18,6 +20,15 @@ public abstract class Command {
      * @param event the event that was fired
      */
     public abstract void onSlashCommandInteraction(SlashCommandInteractionEvent event);
+
+    public void handleInteraction(SlashCommandInteractionEvent event) {
+        try{
+            this.onSlashCommandInteraction(event);
+        }catch(Exception e){
+            EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
+            event.replyEmbeds(builder.build()).queue();
+        }
+    }
 
     /**
      * This method is called to retrieve the slash command data for this command

@@ -77,7 +77,7 @@ public class CommandHandler extends Handler{
         String name = event.getName();
 
         //for every command, check if the name matches the name of the command, if so, run the command
-        this.commands.stream().filter((i) -> i.getMetaInformation().name().equals(name)).forEach((i) -> i.onSlashCommandInteraction(event));
+        this.commands.stream().filter((i) -> i.getMetaInformation().name().equals(name)).forEach((i) -> i.handleInteraction(event));
     }
 
     /**
