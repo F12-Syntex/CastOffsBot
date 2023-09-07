@@ -6,15 +6,16 @@ import java.time.LocalDateTime;
 
 import javax.annotation.Nonnull;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+
+import net.dv8tion.jda.api.EmbedBuilder;
 
 public class EmbedMaker {
 
 private static final String codeLine = "```";
 
 @Nonnull
-public static EmbedBuilder ERROR(User user, String notice, String error_type) {
+public static EmbedBuilder ERROR(User profile, String notice, String error_type) {
     EmbedBuilder embedBuilder = new EmbedBuilder();
     embedBuilder.setTitle("Error Notice");
     embedBuilder.setDescription(notice);
@@ -26,7 +27,7 @@ public static EmbedBuilder ERROR(User user, String notice, String error_type) {
         embedBuilder.addField("Response", codeLine + error_type + codeLine, false);
     }
 
-    embedBuilder.setFooter("User: " + user.getName() + " | ID: " + user.getId(), user.getAvatarUrl());
+    embedBuilder.setFooter("User: " + profile.getName() + " | ID: " + profile.getId(), profile.getAvatarUrl());
     embedBuilder.setTimestamp(Instant.now());    
 
     return embedBuilder;
@@ -43,6 +44,7 @@ public static EmbedBuilder INFO(User user, String notice) {
 
     return embedBuilder;
 }
+
 
     
 }
