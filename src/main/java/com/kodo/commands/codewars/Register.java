@@ -25,7 +25,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
 @CommandMeta(description = "This command registers the user to the system.", name = "register")
-public class Register extends Command {
+public class Register extends CodeWarsCommand {
 
     public Register(Dependencies dependencies) {
         super(dependencies);
@@ -52,38 +52,14 @@ public class Register extends Command {
             return;
         }
 
-  
-
-        User profile = codeWars.getUserProfile(usernameString);
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(profile, User.class);
-
-        if (json != null) {
-            JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-            JsonObject overall = jsonObject.getAsJsonObject("ranks").getAsJsonObject("overall");
-            
-            embedBuilder.setTitle("Success!");
-            embedBuilder.setDescription(usernameString + " has been registered to the system!");
-            embedBuilder.setColor(Color.green);
-            embedBuilder.setThumbnail(this.dependencies.getDiscord().getSelfUser().getAvatarUrl());
-
-            String ranking = jsonObject.get("leaderboardPosition").getAsString();
-
-            embedBuilder.addField("Username", "`" +  usernameString + "`", true);
-            embedBuilder.addField("Honor", "`" +  jsonObject.get("honor").getAsString() + "`", true);
-            embedBuilder.addField("Clan", "`" +  jsonObject.get("clan").getAsString() + "`", true);
-            if(ranking != null && ranking != "0") embedBuilder.addField("Ranking", "`" +  "#" + ranking + "`", true);
-            embedBuilder.addField("Rank", "`" + overall.get("rank").getAsString() + "`", true);
-            embedBuilder.addField("Score", "`" + overall.get("score").getAsString() + "`", true);            
-        }
+        //we can be sure the user exists as we've just registered them
+        User profile = codeWars.getUserProfile(usernameString).get();
 
         Button button = Button.primary("codewars_profile", "View Profile")
             .withUrl("https://www.codewars.com/users/" + usernameString)
             .withStyle(ButtonStyle.LINK);
 
-        event.replyEmbeds(embedBuilder.build()).addActionRow(button).queue();
+        event.replyEmbeds(this.getProfileEmbed(profile).build()).addActionRow(button).queue();
 
     }
 

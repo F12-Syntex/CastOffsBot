@@ -1,6 +1,9 @@
 package com.kodo.codewars;
 
+import java.util.Optional;
+
 import com.kodo.bot.Settings;
+import com.kodo.database.users.UserConfiguration;
 import com.kodo.database.users.UserProfileConfiguration;
 import com.kodo.database.users.UserStorage;
 import com.kodo.database.users.scheme.User;
@@ -29,8 +32,9 @@ public class CodeWars {
         userConfiguration.registerUser(username, data);
     }
 
-    public User getUserProfile(String username){
-        return this.userConfiguration.getUser(username).getProfile().getUser();
+    public Optional<User> getUserProfile(String username){
+        if(!userConfiguration.isRegistered(username)) return Optional.empty();
+        return Optional.of(this.userConfiguration.getUser(username).getProfile().getUser());
     }
 
     public UserStorage getUserStorage() {

@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import org.reflections.Reflections;
 
+import com.kodo.commands.codewars.CodeWarsCommand;
 import com.kodo.handler.Dependencies;
 import com.kodo.handler.Handler;
 
@@ -39,6 +40,9 @@ public class CommandHandler extends Handler{
 
         //for every class ( which is a command ) add it to our commands set
         clazzes.forEach(commandClazz -> {
+            
+            if(commandClazz.isInterface() || commandClazz == CodeWarsCommand.class) return;
+
             try {
                 
                 Command command = commandClazz.getConstructor(Dependencies.class).newInstance(this.dependencies);
@@ -74,6 +78,16 @@ public class CommandHandler extends Handler{
 
         //for every command, check if the name matches the name of the command, if so, run the command
         this.commands.stream().filter((i) -> i.getMetaInformation().name().equals(name)).forEach((i) -> i.onSlashCommandInteraction(event));
+    }
+
+    /**
+     * @param <T> Instance of command
+     * @param clazz the class of the command to get
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Command> T getCommand(Class<? extends Command> clazz){
+        return (T) this.commands.stream().filter((i) -> i.getClass().equals(clazz)).findFirst().orElse(null);
     }
     
 }
