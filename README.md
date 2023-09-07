@@ -12,3 +12,36 @@ Contributions are welcome! If you have any suggestions or improvements, feel fre
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
+
+
+Sure! Here's a reworded version that you can add to your README.md file:
+
+## How to Contribute
+Thank you for your interest in contributing to the Kodo hackathon project! Follow the steps below to get started:
+
+1. **Fork this repository**: Click on the "Fork" button in the top-right corner of this page to create a copy of this repository under your own GitHub account.
+
+2. **Clone the forked repository**: Clone your forked repository to your local development environment using the following command:
+   ```
+   git clone https://github.com/your-username/Kodo.git
+   ```
+
+3. **Create a new branch**: Create a new branch in your local repository to work on your changes. Use a descriptive name for your branch.
+   ```
+   git checkout -b <branch-name>
+   ```
+
+4. **Make changes**: Make your desired changes to the codebase using your preferred text editor or IDE.
+
+5. **Commit and push changes**: After making the necessary changes, commit your changes using the following commands:
+   ```
+   git add .
+   git commit -m "Brief description of the changes"
+   git push origin <branch-name>
+   ```
+
+6. **Create a pull request**: Once you have pushed your changes to your forked repository, navigate to the original repository (https://github.com/F12-Syntex/Kodo) on GitHub. Click on the "Compare & pull request" button to create a pull request.
+
+7. **Review and merge the pull request**: The project maintainer will review your pull request, provide feedback if needed, and then merge it if everything looks good.
+
+That's it! You have successfully contributed to the Kodo hackathon project. Thank you for your contribution!
