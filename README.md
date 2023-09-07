@@ -2,11 +2,6 @@
 - /ping, checks the bots latency
 - /register, registers the user to the system
 
-## Todo List
-- [ ] Save users' completed katas
-- [ ] Update functions to modify user profiles and saved katas
-- [ ] Implement system to return completed katas according to a sort
-
 ## Contributing
 Contributions are welcome! If you have any suggestions or improvements, feel free to open an issue or submit a pull request.
 
@@ -19,7 +14,7 @@ Sure! Here's the updated README.md file with the feature to-do list:
 
 Welcome to the Kodo hackathon project! This Discord bot is being developed as part of a hackathon. Feel free to contribute to this project and add your own ideas!
 
-### Feature To-Do List
+## Feature To-Do List
 
 - [ ] Weekly challenges
 - [ ] Daily challenges
@@ -31,6 +26,7 @@ Welcome to the Kodo hackathon project! This Discord bot is being developed as pa
 - [ ] Tournaments
 - [ ] Challenge user
 - [ ] Challenge backlog
+- [ ] Implement system to return completed katas according to a sort
 
 Please feel free to add more ideas to this list or suggest improvements to existing features. Let's make this Discord bot amazing together!
 
