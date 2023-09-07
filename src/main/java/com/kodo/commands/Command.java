@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  * This is the base class for all the commands
  */
 public abstract class Command {
-
     /**
      * This method is called when a slash command is invoked
      * @param event the event that was fired

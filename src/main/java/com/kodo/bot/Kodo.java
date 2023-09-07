@@ -1,10 +1,20 @@
 package com.kodo.bot;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kodo.codewars.CodeWars;
 import com.kodo.commands.CommandHandler;
 import com.kodo.database.StorageManager;
@@ -30,7 +40,6 @@ public final class Kodo extends ListenerAdapter {
     }
 
     private  Kodo() {
-
         this.configureLogger();
 
         //load the storage

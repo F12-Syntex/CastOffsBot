@@ -1,11 +1,7 @@
 package com.kodo.commands.codewars;
 
 import java.awt.Color;
-import java.util.Objects;
 
-import javax.annotation.Nonnull;
-
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.gson.Gson;
@@ -20,17 +16,14 @@ import com.kodo.handler.Dependencies;
 import com.kodo.utils.EmbedMaker;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
-@SuppressWarnings("null")
 @CommandMeta(description = "This command registers the user to the system.", name = "register")
 public class Register extends Command {
 
