@@ -13,8 +13,26 @@ Contributions are welcome! If you have any suggestions or improvements, feel fre
 ## License
 This project is licensed under the [MIT License](LICENSE).
 
+Sure! Here's the updated README.md file with the feature to-do list:
 
-Sure! Here's a reworded version that you can add to your README.md file:
+## Kodo Hackathon Discord Bot
+
+Welcome to the Kodo hackathon project! This Discord bot is being developed as part of a hackathon. Feel free to contribute to this project and add your own ideas!
+
+### Feature To-Do List
+
+- [ ] Weekly challenges
+- [ ] Daily challenges
+- [ ] Currency gained through challenges
+- [ ] Ranking
+- [ ] Time taken to beat kata
+- [ ] Leaderboard
+- [ ] Custom ranks
+- [ ] Tournaments
+- [ ] Challenge user
+- [ ] Challenge backlog
+
+Please feel free to add more ideas to this list or suggest improvements to existing features. Let's make this Discord bot amazing together!
 
 ## How to Contribute
 Thank you for your interest in contributing to the Kodo hackathon project! Follow the steps below to get started:
