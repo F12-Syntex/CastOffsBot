@@ -15,15 +15,29 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
  * This is the base class for all the commands
  */
 public abstract class Command {
+
+    protected final CommandCooldown cooldown;
+    protected final Dependencies dependencies;
+
     /**
      * This method is called when a slash command is invoked
      * @param event the event that was fired
      */
     public abstract void onSlashCommandInteraction(SlashCommandInteractionEvent event);
+    
 
     public void handleInteraction(SlashCommandInteractionEvent event) {
         try{
-            this.onSlashCommandInteraction(event);
+            if(!this.cooldown.isOnCooldown(event.getUser().getId())){
+                this.onSlashCommandInteraction(event);
+                this.cooldown.applyCooldown(event.getUser().getId());
+            }else{
+                EmbedBuilder builder = EmbedMaker.ERROR_BASIC(event.getUser());
+                builder.setTitle("You're on cooldown!");
+                builder.appendDescription("You can't do that command yet, please wait.");
+                builder.addField("Time remaining", "```" + this.cooldown.getRemainingCooldownFormatted(event.getUser().getId()) + "```", true);
+                event.replyEmbeds(builder.build()).queue();
+            }
         }catch(Exception e){
             EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
             event.replyEmbeds(builder.build()).queue();
@@ -42,8 +56,6 @@ public abstract class Command {
      */
     public abstract @NotNull DefaultMemberPermissions getDefaultMemberPermissions();
 
-    protected final Dependencies dependencies;
-
     /**
      * This method is used to retrieve the meta information for this command
      * @return the meta information
@@ -58,6 +70,9 @@ public abstract class Command {
      */
     public Command(Dependencies dependencies) {
         this.dependencies = dependencies;
+
+        //get the duration from the command meta
+        this.cooldown = new CommandCooldown(this.getMetaInformation().cooldown());
     }
 
     /**

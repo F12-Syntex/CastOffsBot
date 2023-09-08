@@ -39,6 +39,16 @@ public class EmbedMaker {
         return embedBuilder;
     }
 
+        @Nonnull
+    public static EmbedBuilder ERROR_BASIC(User profile) {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Error Notice");
+        embedBuilder.setColor(Color.red);
+        embedBuilder.setFooter("User: " + profile.getName() + " | ID: " + profile.getId(), profile.getAvatarUrl());
+        embedBuilder.setTimestamp(Instant.now());    
+        return embedBuilder;
+    }
+
     @Nonnull
     public static EmbedBuilder INFO(User user, String notice) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
