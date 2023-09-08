@@ -3,7 +3,6 @@ package com.kodo.utils;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,8 +57,7 @@ public class EmbedMaker {
      * @param future
      * @return
      */
-    public static void asyncTask(SlashCommandInteractionEvent event, Runnable runnable) {
-
+    public static void runAsyncTask(SlashCommandInteractionEvent event, Runnable runnable) {
         EmbedBuilder loadingEmbedBuilder = new EmbedBuilder();
         loadingEmbedBuilder.setTitle("INFO");
         loadingEmbedBuilder.setDescription("test");
@@ -70,8 +68,15 @@ public class EmbedMaker {
 
         //Send the loading embed
         event.replyEmbeds(loadedEmbed).queue();
-
-        executorService.submit(runnable);
+        executorService.submit(() -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
+                event.getHook().editOriginalEmbeds(builder.build()).queue();
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -80,8 +85,8 @@ public class EmbedMaker {
      * @param future
      * @return
      */
-    public static void sendAsyncMessage(SlashCommandInteractionEvent event, EventChangable<EmbedBuilder> task) {
-        EmbedMaker.asyncTask(event, () -> {
+    public static void sendAsyncMessage(SlashCommandInteractionEvent event, EmbedBuilderSupplier<EmbedBuilder> task) {
+        EmbedMaker.runAsyncTask(event, () -> {
             try{
                 EmbedBuilder embed = task.call(event.getHook());
                 event.getHook().editOriginalEmbeds(embed.build()).queue();
@@ -99,10 +104,15 @@ public class EmbedMaker {
      * @return
      */
     @SuppressWarnings("null")
-    public static void sendAsyncMessageWithActionItems(SlashCommandInteractionEvent event, EventChangable<EmbedBuilder> task, ItemComponent... items) {
-        EmbedMaker.asyncTask(event, () -> {
-            EmbedBuilder embed = task.call(event.getHook());
-            event.getHook().editOriginalEmbeds(embed.build()).setActionRow(items).queue();
+    public static void sendAsyncMessageWithActionItems(SlashCommandInteractionEvent event, EmbedBuilderSupplier<EmbedBuilder> task, ItemComponent... items) {
+        EmbedMaker.runAsyncTask(event, () -> {
+            try{
+                EmbedBuilder embed = task.call(event.getHook());
+                event.getHook().editOriginalEmbeds(embed.build()).setActionRow(items).queue();
+            }catch(Exception e){
+                EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
+                event.getHook().editOriginalEmbeds(builder.build()).queue();
+            }
         });
     }
 
@@ -111,30 +121,7 @@ public class EmbedMaker {
      * @param <T>
      */
     @FunctionalInterface
-    public interface EventChangable<T> {
+    public interface EmbedBuilderSupplier <T> {
         T call(InteractionHook hook);
-    }
-
-    
+    }    
 }
-
-
-
-/*
- * 
-    FutureTask<EmbedBuilder> futureTask = new FutureTask<>(runnable);
-    CompletableFuture<EmbedBuilder> completableFuture = CompletableFuture.supplyAsync(() -> {
-        try {
-            return futureTask.get(); // Wait for the future to complete and get the result
-        } catch (InterruptedException | ExecutionException e) {
-            // Handle any exceptions that occurred during the execution of the future
-            e.printStackTrace();
-            return null; // Return null or an error embed if necessary
-        }
-    });
-
-    //When the future is done, edit the original message with the result
-    completableFuture.thenAccept(embed -> {
-        event.getHook().editOriginalEmbeds(embed.build()).queue();
-    });
- */
