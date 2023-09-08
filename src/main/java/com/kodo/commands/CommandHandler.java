@@ -70,6 +70,8 @@ public class CommandHandler extends Handler{
                 logger.warning("Command " + command.getMetaInformation().name() + " has no slash command data");
             }
         });
+
+        this.dependencies.getDiscord().updateCommands().queue();
     }
 
     @Override
