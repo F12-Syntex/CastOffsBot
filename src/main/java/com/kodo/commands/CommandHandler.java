@@ -1,6 +1,8 @@
 package com.kodo.commands;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -12,6 +14,7 @@ import com.kodo.commands.codewars.CodeWarsCommand;
 import com.kodo.handler.Dependencies;
 import com.kodo.handler.Handler;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 public class CommandHandler extends Handler{
@@ -59,20 +62,24 @@ public class CommandHandler extends Handler{
         logger.info("Loaded " + this.commands.size() + " command(s)");
     }
 
-    public void registerCommands(){
+    public void registerCommands() {
+        JDA jda = this.dependencies.getDiscord();
+
+        List<SlashCommandData> slashCommands = new ArrayList<>();
 
         this.commands.forEach(command -> {
             logger.info("Registering command: " + command.getMetaInformation().name());
             SlashCommandData data = command.getSlashCommandData();
-            if(data != null){
-                this.dependencies.getDiscord().upsertCommand(data).queue();
-            }else{
+            if (data != null) {
+                slashCommands.add(data);
+            } else {
                 logger.warning("Command " + command.getMetaInformation().name() + " has no slash command data");
             }
         });
 
-        this.dependencies.getDiscord().updateCommands().queue();
+        jda.updateCommands().addCommands(slashCommands).queue();
     }
+
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
