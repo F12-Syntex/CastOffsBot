@@ -53,7 +53,7 @@ public final class Kodo extends ListenerAdapter {
         this.builder = JDABuilder.createDefault(authToken)
                 .disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
                 .setBulkDeleteSplittingEnabled(false)
-                .setActivity(Activity.watching("TV"));
+                .setActivity(Activity.competing("Codewars"));
 
         dependencies.setBuilder(builder);
     }
@@ -74,8 +74,6 @@ public final class Kodo extends ListenerAdapter {
             this.commandHandler.registerCommands();
             this.discord.addEventListener(this.commandHandler);
             dependencies.setCommandHandler(commandHandler);
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
