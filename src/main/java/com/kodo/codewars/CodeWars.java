@@ -5,7 +5,6 @@ import java.util.Optional;
 import com.kodo.bot.CodewarsApi;
 import com.kodo.bot.Settings;
 import com.kodo.database.users.UserStorage;
-import com.kodo.database.users.scheme.Challenges;
 import com.kodo.database.users.scheme.User;
 import com.kodo.handler.Dependencies;
 
@@ -15,32 +14,30 @@ import com.kodo.handler.Dependencies;
 public class CodeWars {
 
     private final Dependencies dependencies;
-    private final UserStorage userConfiguration;
     private final CodewarsApi api;
 
     public CodeWars(Dependencies dependencies){
         this.dependencies = dependencies;
-        this.userConfiguration = dependencies.getStorage().getUserStorage();
-        this.api = new CodewarsApi();
+        this.api = new CodewarsApi(dependencies);
     }
 
     public void registerUser(String username){
-        if(userConfiguration.isRegistered(username)) throw new IllegalArgumentException("User is already registered");
+        if(this.getUserStorage().isRegistered(username)) throw new IllegalArgumentException("User is already registered");
 
         User data = this.api.getProfileData(username);
 
         if(data.getClan() == null || !data.getClan().equals(Settings.CLAN_NAME)) throw new IllegalArgumentException("User is not in the clan");
 
-        userConfiguration.registerUser(username, data);
+        this.getUserStorage().registerUser(username, data);
     }
 
     public Optional<User> getUserProfile(String username){
-        if(!userConfiguration.isRegistered(username)) return Optional.empty();
-        return Optional.of(this.userConfiguration.getUser(username).getProfile().getUser());
+        if(!this.getUserStorage().isRegistered(username)) return Optional.empty();
+        return Optional.of(this.getUserStorage().getUser(username).getProfile().getUser());
     }
 
     public UserStorage getUserStorage() {
-        return userConfiguration;
+        return this.dependencies.getStorage().getUserStorage();
     }
 
     public Dependencies getDependencies() {
