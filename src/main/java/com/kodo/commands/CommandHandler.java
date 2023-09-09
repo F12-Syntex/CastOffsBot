@@ -1,5 +1,6 @@
 package com.kodo.commands;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,7 +11,6 @@ import javax.annotation.Nonnull;
 
 import org.reflections.Reflections;
 
-import com.kodo.commands.codewars.CodeWarsCommand;
 import com.kodo.handler.Dependencies;
 import com.kodo.handler.Handler;
 
@@ -44,7 +44,7 @@ public class CommandHandler extends Handler{
         //for every class ( which is a command ) add it to our commands set
         clazzes.forEach(commandClazz -> {
             
-            if(commandClazz.isInterface() || commandClazz == CodeWarsCommand.class) return;
+            if(commandClazz.isInterface() || Modifier.isAbstract(commandClazz.getModifiers())) return;
 
             try {
                 
