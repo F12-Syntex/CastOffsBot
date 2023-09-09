@@ -70,19 +70,21 @@ public class EmbedMaker {
     public static void runAsyncTask(SlashCommandInteractionEvent event, Runnable runnable) {
         EmbedBuilder loadingEmbedBuilder = new EmbedBuilder();
         loadingEmbedBuilder.setTitle("Loading task...");
-        loadingEmbedBuilder.setDescription("Hang tight while this task, this may take some time depending on the request.");
+        loadingEmbedBuilder.setDescription("Hang tight while this task, this may take some time depending on the request. In the meantime, here are some quotes to keep you entertained.");
         loadingEmbedBuilder.setColor(Color.green);
         loadingEmbedBuilder.setTimestamp(Instant.now());
 
-        loadingEmbedBuilder.setThumbnail("https://media.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif");
+        loadingEmbedBuilder.setImage("https://media.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif");
 
-        
-
+        loadingEmbedBuilder.setFooter("User: " + event.getUser().getName() + " | ID: " + event.getUser().getId(), event.getUser().getAvatarUrl());
+        loadingEmbedBuilder.setTimestamp(Instant.now());
+        loadingEmbedBuilder.addField("Quote", "```" + QuoteUtils.getRandomQuote() + "```", true);
 
         MessageEmbed loadedEmbed = loadingEmbedBuilder.build();
 
         //Send the loading embed
         event.replyEmbeds(loadedEmbed).queue();
+        
         executorService.submit(() -> {
             try {
                 runnable.run();

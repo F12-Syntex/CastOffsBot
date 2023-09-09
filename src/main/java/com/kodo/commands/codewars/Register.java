@@ -44,23 +44,26 @@ public class Register extends CodeWarsCommand {
         String usernameString = username.getAsString();
         CodeWars codeWars = this.dependencies.getCodeWars();
 
-        try{       
-            codeWars.registerUser(usernameString);
-        }catch(Exception e){
-            EmbedBuilder embed = EmbedMaker.ERROR(event.getUser(), "Could not register the user", e.getLocalizedMessage());
-            event.replyEmbeds(embed.build()).queue();
-            return;
-        }
+        EmbedMaker.runAsyncTask(event, () -> {
 
-        //we can be sure the user exists as we've just registered them
-        User profile = codeWars.getUserProfile(usernameString).get();
+            try{       
+                codeWars.registerUser(usernameString);
+            }catch(Exception e){
+                EmbedBuilder embed = EmbedMaker.ERROR(event.getUser(), "Could not register the user", e.getLocalizedMessage());
+                event.getHook().editOriginalEmbeds(embed.build()).queue();
+                return;
+            }
 
-        Button button = Button.primary("codewars_profile", "View Profile")
-            .withUrl("https://www.codewars.com/users/" + usernameString)
-            .withStyle(ButtonStyle.LINK);
+            //we can be sure the user exists as we've just registered them
+            User profile = codeWars.getUserProfile(usernameString).get();
 
-        event.replyEmbeds(this.getProfileEmbed(profile).build()).addActionRow(button).queue();
+            Button button = Button.primary("codewars_profile", "View Profile")
+                .withUrl("https://www.codewars.com/users/" + usernameString)
+                .withStyle(ButtonStyle.LINK);
 
+            event.getHook().editOriginalEmbeds(this.getProfileEmbed(profile).build()).setActionRow(button).queue();
+
+        });
     }
 
     @Override
