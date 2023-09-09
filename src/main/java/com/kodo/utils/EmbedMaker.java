@@ -69,10 +69,15 @@ public class EmbedMaker {
      */
     public static void runAsyncTask(SlashCommandInteractionEvent event, Runnable runnable) {
         EmbedBuilder loadingEmbedBuilder = new EmbedBuilder();
-        loadingEmbedBuilder.setTitle("INFO");
-        loadingEmbedBuilder.setDescription("test");
+        loadingEmbedBuilder.setTitle("Loading task...");
+        loadingEmbedBuilder.setDescription("Hang tight while this task, this may take some time depending on the request.");
         loadingEmbedBuilder.setColor(Color.green);
         loadingEmbedBuilder.setTimestamp(Instant.now());
+
+        loadingEmbedBuilder.setThumbnail("https://media.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif");
+
+        
+
 
         MessageEmbed loadedEmbed = loadingEmbedBuilder.build();
 
