@@ -1,15 +1,8 @@
 package com.kodo.commands.codewars;
 
-import java.awt.Color;
-
 import org.jetbrains.annotations.NotNull;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.kodo.codewars.CodeWars;
-import com.kodo.commands.Command;
 import com.kodo.commands.CommandMeta;
 import com.kodo.database.users.scheme.User;
 import com.kodo.handler.Dependencies;

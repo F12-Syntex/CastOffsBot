@@ -28,7 +28,6 @@ public class CodeWars {
         if(userConfiguration.isRegistered(username)) throw new IllegalArgumentException("User is already registered");
 
         User data = this.api.getProfileData(username);
-        // Challenges challenges = this.api.getCompletedChallenges(username);
 
         if(data.getClan() == null || !data.getClan().equals(Settings.CLAN_NAME)) throw new IllegalArgumentException("User is not in the clan");
 
