@@ -85,6 +85,7 @@ public class EmbedMaker {
                 EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
                 event.getHook().editOriginalEmbeds(builder.build()).queue();
                 e.printStackTrace();
+                e.printStackTrace();
             }
         });
     }
@@ -103,6 +104,7 @@ public class EmbedMaker {
             }catch(Exception e){
                 EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
                 event.getHook().editOriginalEmbeds(builder.build()).queue();
+                e.printStackTrace();
             }
         });
     }
@@ -122,6 +124,7 @@ public class EmbedMaker {
             }catch(Exception e){
                 EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
                 event.getHook().editOriginalEmbeds(builder.build()).queue();
+                e.printStackTrace();
             }
         });
     }

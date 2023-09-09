@@ -24,11 +24,11 @@ public abstract class Command {
      * @param event the event that was fired
      */
     public abstract void onSlashCommandInteraction(SlashCommandInteractionEvent event);
-    
 
     public void handleInteraction(SlashCommandInteractionEvent event) {
+
         try{
-            if(!this.cooldown.isOnCooldown(event.getUser().getId())){
+            if(!this.cooldown.isOnCooldown(event.getUser().getId(), event.getGuild())){
                 this.onSlashCommandInteraction(event);
                 this.cooldown.applyCooldown(event.getUser().getId());
             }else{
@@ -41,6 +41,7 @@ public abstract class Command {
         }catch(Exception e){
             EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
             event.replyEmbeds(builder.build()).queue();
+            e.printStackTrace();
         }
     }
 
