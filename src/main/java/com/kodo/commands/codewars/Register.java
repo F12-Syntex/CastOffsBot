@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import com.kodo.codewars.CodeWars;
 import com.kodo.commands.CommandMeta;
 import com.kodo.database.users.scheme.User;
+import com.kodo.embeds.EmbedMaker;
 import com.kodo.handler.Dependencies;
-import com.kodo.utils.EmbedMaker;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

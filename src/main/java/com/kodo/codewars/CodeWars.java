@@ -18,7 +18,7 @@ public class CodeWars {
 
     public CodeWars(Dependencies dependencies){
         this.dependencies = dependencies;
-        this.api = new CodewarsApi(dependencies);
+        this.api = new CodewarsApi(this);
     }
 
     public void registerUser(String username){

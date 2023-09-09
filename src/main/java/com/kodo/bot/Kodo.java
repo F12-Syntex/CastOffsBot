@@ -25,11 +25,25 @@ public final class Kodo extends ListenerAdapter {
     private final Dependencies dependencies = new Dependencies();
     
     public static void main(String[] args) {
-        Kodo kodo = new Kodo();
-        kodo.build();
+        Kodo.getInstance().build();
     }
 
-    private  Kodo() {
+    /**
+     * avoid using this singleton unless necessary
+     * @deprecated
+     * @return
+     */
+    @Deprecated
+    public static Kodo getInstance() {
+        if (Kodo.instance == null) {
+            Kodo.instance = new Kodo();
+        }
+        return Kodo.instance;
+    }
+
+    private static Kodo instance;
+
+    private Kodo() {
         this.configureLogger();
 
         CodeWars codeWars = new CodeWars(this.dependencies);
@@ -70,28 +84,41 @@ public final class Kodo extends ListenerAdapter {
         }
     }
 
-public void configureLogger() {
-    Logger logger = Logger.getGlobal();
-    
-    // Set the log level to control which logs are printed
-    logger.setLevel(Level.ALL);
-    
-    // Create a console handler to output log messages to the console
-    ConsoleHandler consoleHandler = new ConsoleHandler();
-    
-    // Create a custom formatter that prints only the class name and log message
-    Formatter formatter = new Formatter() {
-        @Override
-        public String format(java.util.logging.LogRecord record) {
-            return record.getSourceClassName() + ": " + record.getMessage() + "\n";
-        }
-    };
-    
-    // Set the custom formatter for the console handler
-    consoleHandler.setFormatter(formatter);
-    
-    // Remove any existing handlers from the logger
-    logger.setUseParentHandlers(false);
-    logger.addHandler(consoleHandler);
-}
+    public void configureLogger() {
+        Logger logger = Logger.getGlobal();
+        
+        // Set the log level to control which logs are printed
+        logger.setLevel(Level.ALL);
+        
+        // Create a console handler to output log messages to the console
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        
+        // Create a custom formatter that prints only the class name and log message
+        Formatter formatter = new Formatter() {
+            @Override
+            public String format(java.util.logging.LogRecord record) {
+                return record.getSourceClassName() + ": " + record.getMessage() + "\n";
+            }
+        };
+        
+        // Set the custom formatter for the console handler
+        consoleHandler.setFormatter(formatter);
+        
+        // Remove any existing handlers from the logger
+        logger.setUseParentHandlers(false);
+        logger.addHandler(consoleHandler);
+    }
+
+    public JDA getDiscord() {
+        return discord;
+    }
+
+    public CommandHandler getCommandHandler() {
+        return commandHandler;
+    }
+
+    public Dependencies getDependencies() {
+        return dependencies;
+    }
+
 }

@@ -2,8 +2,8 @@ package com.kodo.commands;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.kodo.embeds.EmbedMaker;
 import com.kodo.handler.Dependencies;
-import com.kodo.utils.EmbedMaker;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
