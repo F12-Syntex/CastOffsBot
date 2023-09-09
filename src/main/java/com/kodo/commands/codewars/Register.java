@@ -4,8 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 import com.kodo.codewars.CodeWars;
 import com.kodo.commands.CommandMeta;
+import com.kodo.database.users.UserConfiguration;
+import com.kodo.database.users.scheme.Challenges;
 import com.kodo.database.users.scheme.User;
 import com.kodo.embeds.EmbedMaker;
+import com.kodo.embeds.PagedEmbed;
 import com.kodo.handler.Dependencies;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -38,7 +41,6 @@ public class Register extends CodeWarsCommand {
         CodeWars codeWars = this.dependencies.getCodeWars();
 
         EmbedMaker.runAsyncTask(event, () -> {
-
             try{       
                 codeWars.registerUser(usernameString);
             }catch(Exception e){
@@ -48,13 +50,18 @@ public class Register extends CodeWarsCommand {
             }
 
             //we can be sure the user exists as we've just registered them
-            User profile = codeWars.getUserProfile(usernameString).get();
+            UserConfiguration userData = codeWars.getUserStorage().getUserData(usernameString).get();
+            User profile = userData.getProfile().getUser();
+            Challenges challenges = userData.getCompletedKatas().getChallenges();
 
             Button button = Button.primary("codewars_profile", "View Profile")
                 .withUrl("https://www.codewars.com/users/" + usernameString)
                 .withStyle(ButtonStyle.LINK);
 
-            event.getHook().editOriginalEmbeds(this.getProfileEmbed(profile).build()).setActionRow(button).queue();
+            // PagedEmbed embed = this.getProfileEmbed(profile, challenges);
+            // event.getHook().editOriginalEmbeds(embed.build()).setActionRow(button).queue();
+
+            // embed.sendEdit(event.getHook());
 
         });
     }
