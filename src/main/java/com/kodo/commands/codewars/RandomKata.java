@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -28,15 +30,23 @@ public class RandomKata extends CodeWarsCommand {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
+        int difficulty = -1;
+        boolean shortDescription = false;
+
+        if(event.getOption("difficulty") != null){
+            difficulty = (int) event.getOption("difficulty").getAsLong();
+        }
+
+        if(event.getOption("short") != null){
+            shortDescription = event.getOption("short").getAsBoolean();
+        }
+
         CodewarsKata challenge = this.dependencies
                                         .getStorage()
                                         .getCodewarsStorage()
                                         .getChallenges()
                                         .getKataInformation()
-                                        .getRandomChallenge();
-
-        
-        System.out.println(challenge.getRank().getColor());
+                                        .getRandomChallenge(difficulty, shortDescription);
 
         EmbedBuilder page1 = new EmbedBuilder();
         page1.setColor(challenge.getRank().getColorEnum());
@@ -76,15 +86,10 @@ public class RandomKata extends CodeWarsCommand {
 
         Button button1 = Button.primary("codewars_profile", "View Kata")
             .withUrl(challenge.getUrl())
-            .withStyle(ButtonStyle.SUCCESS);
-
-        Button button2 = Button.primary("codewars_reload", "Refresh")
-            .withUrl(challenge.getUrl())
-            .withStyle(ButtonStyle.SUCCESS);
+            .withStyle(ButtonStyle.LINK);
 
         List<Button> buttons = new ArrayList<>();
         buttons.add(button1);
-        buttons.add(button2);
 
         // event.replyEmbeds(builder.build()).setActionRow(button).queue();
         builder.send(event, buttons);
@@ -92,7 +97,21 @@ public class RandomKata extends CodeWarsCommand {
 
     @Override
     public SlashCommandData getSlashCommandData() {
-        return this.getBareBonesSlashCommandData();
+        SlashCommandData data =  this.getBareBonesSlashCommandData()
+                        .addOption(OptionType.INTEGER, "difficulty", "The difficulty of the kata", false)
+                        .addOption(OptionType.BOOLEAN, "short", "If the description should be short", false);
+        
+        OptionData difficulty = data.getOptions().get(0);
+        difficulty.addChoice("1", 1);
+        difficulty.addChoice("2", 2);
+        difficulty.addChoice("3", 3);
+        difficulty.addChoice("4", 4);
+        difficulty.addChoice("5", 5);
+        difficulty.addChoice("6", 5);
+        difficulty.addChoice("7", 5);
+        difficulty.addChoice("8", 5);
+
+        return data;
     }
 
     @Override

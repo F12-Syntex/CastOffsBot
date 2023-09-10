@@ -14,6 +14,10 @@ public class Rank {
         return id;
     }
 
+    public int getDifficulty(){
+        return this.id*-1;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
