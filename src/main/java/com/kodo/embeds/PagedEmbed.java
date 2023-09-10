@@ -24,6 +24,8 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
     private int page = 0;
     private List<EmbedBuilder> pages = new ArrayList<>();
 
+    private List<Button> buttons = new ArrayList<>();
+
     private String nextId = UUID.randomUUID().toString();
     private String previousId = UUID.randomUUID().toString();
 
@@ -46,15 +48,23 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
     }
 
     @SuppressWarnings("null")
+    public void send(SlashCommandInteractionEvent event, List<Button> buttons){
+        this.hook = event.getHook();
+        this.buttons = buttons;
+        event.replyEmbeds(this.build()).addActionRow(this.getButtons()).queue();
+    }
+
+    @SuppressWarnings("null")
     public void sendEdit(InteractionHook event){
         this.hook = event;
         event.editOriginalEmbeds(this.build()).setActionRow(this.getButtons()).queue();
     }
 
+    @SuppressWarnings("null")
     public void sendEdit(InteractionHook event, List<Button> buttons){
         this.hook = event;
-        buttons.addAll(this.getButtons());
-        event.editOriginalEmbeds(this.build()).setActionRow(buttons).queue();
+        this.buttons = buttons;
+        event.editOriginalEmbeds(this.build()).setActionRow(this.getButtons()).queue();
     }
 
     @SuppressWarnings("null")
@@ -105,6 +115,8 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
             Button nextButtonDisabled = Button.secondary(nextId, "Next \u25B6").asDisabled();
             buttons.add(nextButtonDisabled);
         }
+
+        buttons.addAll(this.buttons);
 
         return buttons;
     }

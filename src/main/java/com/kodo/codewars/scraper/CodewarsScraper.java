@@ -118,7 +118,6 @@ public class CodewarsScraper {
 
         // Create a CountDownLatch to wait for all tasks to complete
         CountDownLatch latch = new CountDownLatch(numIds);
-        final int completed = kataInfo.getKatas().keySet().size();
 
         for (int i = 0; i < numIds; i += numThreads) {
             final int startIndex = i;

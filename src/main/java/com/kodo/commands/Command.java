@@ -1,20 +1,27 @@
 package com.kodo.commands;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NotNull;
 
 import com.kodo.embeds.EmbedMaker;
 import com.kodo.handler.Dependencies;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 /*
  * This is the base class for all the commands
+ * TODO: hook buttons to their command
  */
-public abstract class Command {
+public abstract class Command implements EventListener{
 
     protected final CommandCooldown cooldown;
     protected final Dependencies dependencies;
@@ -24,6 +31,12 @@ public abstract class Command {
      * @param event the event that was fired
      */
     public abstract void onSlashCommandInteraction(SlashCommandInteractionEvent event);
+
+    /**
+     * This method is called when a button is pressed
+     * @param event the event that was fired
+     */
+    public abstract void onButtonPressed(ButtonInteractionEvent event);
 
     public void handleInteraction(SlashCommandInteractionEvent event) {
 
@@ -74,6 +87,8 @@ public abstract class Command {
 
         //get the duration from the command meta
         this.cooldown = new CommandCooldown(this.getMetaInformation().cooldown());
+
+        this.dependencies.getDiscord().addEventListener(this);
     }
 
     /**
@@ -92,4 +107,17 @@ public abstract class Command {
 
         return Commands.slash(name, description).setDefaultPermissions(permissions);
     }
+
+    @Override
+    public void onEvent(@Nonnull GenericEvent event){
+        if (event instanceof ButtonInteractionEvent) {
+            ButtonInteractionEvent messageEvent = (ButtonInteractionEvent) event;
+            Button button = messageEvent.getButton();        
+            String btnId = button.getId();
+
+            if(btnId == null) return;
+
+        }
+    }
+
 }

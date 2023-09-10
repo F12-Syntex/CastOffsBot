@@ -6,6 +6,7 @@ import com.kodo.embeds.PagedEmbed;
 import com.kodo.handler.Dependencies;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
@@ -41,6 +42,11 @@ public class Developer extends AdminCommand{
     @Override
     public DefaultMemberPermissions getDefaultMemberPermissions() {
        return DefaultMemberPermissions.ENABLED;
+    }
+
+    @Override
+    public void onButtonPressed(ButtonInteractionEvent event) {
+        return;
     }
     
 }

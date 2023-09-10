@@ -3,13 +3,13 @@ package com.kodo.database.users;
 import java.io.File;
 
 import com.google.gson.Gson;
-import com.kodo.database.Configuration;
+import com.kodo.database.UsersConfiguration;
 import com.kodo.database.users.scheme.Challenge;
 import com.kodo.database.users.scheme.Challenges;
 import com.kodo.handler.Dependencies;
 import com.kodo.utils.FileUtils;
 
-public class UserCompletedConfiguration extends Configuration {
+public class UserCompletedConfiguration extends UsersConfiguration {
 
     private Challenges challenges;
 

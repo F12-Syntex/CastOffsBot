@@ -3,7 +3,7 @@ package com.kodo.database.users;
 import java.io.File;
 
 import com.google.gson.Gson;
-import com.kodo.database.Configuration;
+import com.kodo.database.UsersConfiguration;
 import com.kodo.database.users.scheme.User;
 import com.kodo.handler.Dependencies;
 import com.kodo.utils.FileUtils;
@@ -11,7 +11,7 @@ import com.kodo.utils.FileUtils;
 /**
  * this user config stores the users profile data
  */
-public class UserProfileConfiguration extends Configuration{
+public class UserProfileConfiguration extends UsersConfiguration{
 
     private User user;
 

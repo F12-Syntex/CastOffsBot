@@ -1,8 +1,11 @@
 package com.kodo.codewars.scraper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class KataInformation {
 
@@ -14,6 +17,15 @@ public class KataInformation {
         this.katas = new HashMap<>();
 
         this.cachedKata.add("64fbfe2618692c2018ebbddb");
+    }
+
+    public List<CodewarsKata> getChallenges() {
+        return new ArrayList<>(this.katas.values());
+    }
+
+    public CodewarsKata getRandomChallenge(){
+        int randomIndex = ThreadLocalRandom.current().nextInt(this.katas.size());
+        return this.getChallenges().get(randomIndex);
     }
     
     public Set<String> getCachedKata() {
