@@ -32,7 +32,7 @@ public class CodewarsScraper {
     private TaskTracker tracker;
 
     // Create a thread pool with the specified number of threads
-    private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private ExecutorService executor = Executors.newFixedThreadPool(1);
 
 
     public void scrapeCodewars() {
@@ -73,33 +73,40 @@ public class CodewarsScraper {
         
     }
 
-    private void save(){
+    private synchronized void save(){
         // Save to file using Gson pretty printing
-        String jsonPretty = gson.toJson(kataInfo);
-        FileUtils.writeFile(file, jsonPretty);
-        System.out.println("Saved contents");
+        synchronized(kataInfo){
+            String jsonPretty = gson.toJson(kataInfo);
+            FileUtils.writeFile(file, jsonPretty);
+            System.out.println("Saved contents to file:  " + this.kataInfo.getKatas().keySet().size() + " katas");
+        }
     }
 
     private void processId(KataInformation kataInfo, String id) {
 
-        System.out.println(
-                "Processing id: " + id + " " + counter.incrementAndGet() + "/" + kataInfo.getCachedKata().size()
-                        + " by " + Thread.currentThread().getName()
-                        + " " + (this.tracker.getPercentageComplete()*100) + "% complete " + this.tracker.getEstimatedTimeRemainingAsPrettyString() + " remaining");
+        try{
+            System.out.println(
+                    "Processing id: " + id + " " + counter.incrementAndGet() + "/" + this.tracker.getTotalTasks()
+                            + " by " + Thread.currentThread().getName()
+                            + " " + (this.tracker.getPercentageComplete()*100) + "% complete " + this.tracker.getEstimatedTimeRemainingAsPrettyString() + " remaining");
 
-        String url = "https://www.codewars.com/api/v1/code-challenges/" + id;
+            String url = "https://www.codewars.com/api/v1/code-challenges/" + id;
 
-        String json = readWebPage(url);
+            String json = readWebPage(url);
 
-        CodewarsKata kata = new Gson().fromJson(json, CodewarsKata.class);
+            CodewarsKata kata = new Gson().fromJson(json, CodewarsKata.class);
 
-        if (kata == null) {
-            System.out.println("Kata is null");
-            return;
+            if (kata == null) {
+                System.out.println("Kata is null");
+                return;
+            }
+
+            kataInfo.addKata(id, kata);
+            this.tracker.incrementCompletedTasks();
+
+        }catch(Exception e){
+            e.printStackTrace();
         }
-
-        kataInfo.addKata(id, kata);
-        this.tracker.incrementCompletedTasks();
         
     }
 
@@ -111,6 +118,7 @@ public class CodewarsScraper {
 
         // Create a CountDownLatch to wait for all tasks to complete
         CountDownLatch latch = new CountDownLatch(numIds);
+        final int completed = kataInfo.getKatas().keySet().size();
 
         for (int i = 0; i < numIds; i += numThreads) {
             final int startIndex = i;
@@ -123,13 +131,13 @@ public class CodewarsScraper {
                         processId(kataInfo, id);
                     }
                 }
-
-                //save every so often
-                if(startIndex % 50 == 0){
-                    this.save();
-                }   
-
                 latch.countDown();
+
+
+                if((counter.get() + 1) % 20 == 0){
+                    this.save();
+                }
+
             });
 
         }
