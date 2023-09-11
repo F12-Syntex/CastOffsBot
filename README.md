@@ -33,8 +33,6 @@ Welcome to the Kodo hackathon project! This Discord bot is being developed as pa
 
 Please feel free to add more ideas to this list or suggest improvements to existing features. Let's make this Discord bot amazing together!
 
-Sure! Here's the updated "How to Contribute" section with the instructions you requested:
-
 ## How to Contribute
 Thank you for your interest in contributing to the Kodo hackathon project! Follow the steps below to get started:
 
