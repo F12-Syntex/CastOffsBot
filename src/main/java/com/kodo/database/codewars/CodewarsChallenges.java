@@ -25,15 +25,13 @@ public class CodewarsChallenges extends Configuration{
         if (contents.isEmpty()) {
             gson = "{}"; // Empty JSON object
             this.kataInformation = new KataInformation();
-            this.save(this.kataInformation);
+            Logger.getGlobal().warning("No katas found...");
             return;
         } else {
             gson = contents;
         }
     
         this.kataInformation = new Gson().fromJson(gson, KataInformation.class);
-        this.save(this.kataInformation);
-
         Logger.getGlobal().info("Loaded " + this.kataInformation.getChallenges().size() + " katas.");
     }
 
@@ -44,5 +42,10 @@ public class CodewarsChallenges extends Configuration{
 
     public KataInformation getKataInformation() {
         return kataInformation;
+    }
+
+    @Override
+    public void save(Object obj) {
+        return;
     }
 }
