@@ -28,8 +28,8 @@ Welcome to the Kodo hackathon project! This Discord bot is being developed as pa
 - [ ] Tournaments
 - [ ] Challenge user
 - [ ] Challenge backlog
-- [ ] Implement system to return completed katas according to a sort
-- [ ] Async messages, while the server loads the information, the bot will present a loading message before updating it with the content
+- [x] Implement system to return completed katas according to a sort
+- [x] Async messages, while the server loads the information, the bot will present a loading message before updating it with the content
 
 Please feel free to add more ideas to this list or suggest improvements to existing features. Let's make this Discord bot amazing together!
 

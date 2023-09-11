@@ -3,11 +3,15 @@ package com.kodo.embeds;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.annotation.Nonnull;
 
+import com.kodo.codewars.scraper.CodewarsKata;
 import com.kodo.utils.QuoteUtils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,6 +20,8 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
 public class EmbedMaker {
 
@@ -61,6 +67,57 @@ public class EmbedMaker {
         embedBuilder.setFooter("User: " + user.getName() + " | ID: " + user.getId(), user.getAvatarUrl());
 
         return embedBuilder;
+    }
+
+    @SuppressWarnings("null")
+    public static CodewarsChallengeEmbed getKataEmbed(CodewarsKata challenge){
+
+        EmbedBuilder page1 = new EmbedBuilder();
+        page1.setColor(challenge.getRank().getColorEnum());
+        page1.setTitle(challenge.getName(), challenge.getUrl());
+
+        String description = challenge.getDescription();
+
+        if(description.length() > 4000){
+            description = description.substring(0, 4000) + "...";
+        }
+
+        page1.setDescription(description);
+
+        EmbedBuilder page2 = new EmbedBuilder();
+
+        page2.setColor(challenge.getRank().getColorEnum());
+        page2.setTitle(challenge.getName(), challenge.getUrl());
+
+        page2.addField("Tags", "```" + Arrays.toString(challenge.getTags().toArray()) + "```", false);
+        page2.addField("Rank", "```" + challenge.getRank().getName() + "```", false);
+        page2.addField("Category", "```" + challenge.getCategory() + "```", false);
+        page2.addField("Languages", "```" + Arrays.toString(challenge.getLanguages().toArray()) + "```", false);
+        page2.addField("Stars", "```" + challenge.getTotalStars() + "```", true);
+        page2.addField("Completed", "```" + challenge.getTotalCompleted() + "```", true);
+        page2.addField("Approved At", "```" + challenge.getApprovedAt() + "```", true);
+
+        if(challenge.getApprovedBy() != null){
+            page2.addField("Approved By",  "```" + challenge.getApprovedBy().getUsername()  + "```", true);
+        }
+
+        page2.addField("Author", "```" + challenge.getCreatedBy().getUsername()  + "```", true);
+        page2.addField("Total Attempts", "```" + challenge.getTotalAttempts() + "```", true);
+        page2.addField("Vote score", "```" + challenge.getVoteScore() + "```", true); 
+
+        PagedEmbed builder = new PagedEmbed();
+        builder.appendPages(page1, page2);
+
+        Button button1 = Button.primary("codewars_profile", "View Kata")
+            .withUrl(challenge.getUrl())
+            .withStyle(ButtonStyle.LINK);
+
+        List<Button> buttons = new ArrayList<>();
+        buttons.add(button1);
+
+        CodewarsChallengeEmbed challengeEmbed = new CodewarsChallengeEmbed(builder, buttons);
+
+        return challengeEmbed;
     }
 
     /**

@@ -49,7 +49,11 @@ public class CodewarsKata {
     }
 
     public String getUrl() {
-        return url;
+        if(this.url == null){
+            return "https://www.codewars.com/kata/" + this.slug;
+        }
+        return this.url;
+        
     }
 
     public void setUrl(String url) {

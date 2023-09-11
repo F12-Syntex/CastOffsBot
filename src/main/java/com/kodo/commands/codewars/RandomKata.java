@@ -31,7 +31,7 @@ public class RandomKata extends CodeWarsCommand {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
         int difficulty = -1;
-        boolean shortDescription = false;
+        boolean shortDescription = true;
 
         if(event.getOption("difficulty") != null){
             difficulty = (int) event.getOption("difficulty").getAsLong();

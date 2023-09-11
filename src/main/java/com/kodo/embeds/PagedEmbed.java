@@ -31,6 +31,34 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
 
     private InteractionHook hook;
 
+
+    public void setNextId(String nextId) {
+        this.nextId = nextId;
+    }
+
+    public void setPreviousId(String previousId) {
+        this.previousId = previousId;
+    }
+
+    public void setHook(InteractionHook hook) {
+        this.hook = hook;
+    }
+
+    public void setButtons(List<Button> buttons) {
+        this.buttons = buttons;
+    }
+
+    public void setPages(List<EmbedBuilder> pages) {
+        this.pages = pages;
+    }
+
+    public void setPages(EmbedBuilder... pages) {
+        this.pages.clear();
+        for(EmbedBuilder i : pages){
+            this.pages.add(i);
+        }
+    }
+
     public void appendPage(EmbedBuilder embed){
         this.pages.add(embed);
     }

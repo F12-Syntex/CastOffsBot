@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.kodo.codewars.CodeWars;
+import com.kodo.codewars.events.IntervalChallenge;
 import com.kodo.commands.CommandHandler;
 import com.kodo.database.StorageManager;
 import com.kodo.handler.Dependencies;
@@ -21,6 +22,9 @@ public final class Kodo extends ListenerAdapter {
     private JDABuilder builder;
     private JDA discord;
     private CommandHandler commandHandler;
+
+    private IntervalChallenge dailyChallenges;
+    private IntervalChallenge weeklyChallenges;
 
     private final Dependencies dependencies = new Dependencies();
     
@@ -78,6 +82,15 @@ public final class Kodo extends ListenerAdapter {
             this.commandHandler.registerCommands();
             this.discord.addEventListener(this.commandHandler);
             dependencies.setCommandHandler(commandHandler);
+
+            this.dailyChallenges = new IntervalChallenge(this.dependencies, 1, java.util.concurrent.TimeUnit.DAYS, 5, 8);
+            this.dailyChallenges.host();
+
+            this.weeklyChallenges = new IntervalChallenge(this.dependencies, 7, java.util.concurrent.TimeUnit.DAYS, 4, 5);
+            this.weeklyChallenges.host();
+
+            this.dependencies.setDailyChallenges(this.dailyChallenges);
+            this.dependencies.setWeeklyChallenges(this.weeklyChallenges);
 
         } catch (Exception e) {
             e.printStackTrace();

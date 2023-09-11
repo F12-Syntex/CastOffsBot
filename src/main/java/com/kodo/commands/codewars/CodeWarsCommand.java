@@ -1,7 +1,9 @@
 package com.kodo.commands.codewars;
 
 import java.awt.Color;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,27 +41,47 @@ public abstract class CodeWarsCommand extends Command{
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(profile, User.class);
 
+        Color color = Color.green;
+
         if (json != null) {
             JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
             JsonObject overall = jsonObject.getAsJsonObject("ranks").getAsJsonObject("overall");
             
-            embedBuilder.setTitle("Success!");
-            embedBuilder.setColor(Color.green);
+            embedBuilder.setTitle(profile.getUsername(), "https://www.codewars.com/users/" + profile.getUsername());
+            embedBuilder.setColor(color);
             embedBuilder.setThumbnail(this.dependencies.getDiscord().getSelfUser().getAvatarUrl());
 
             String ranking = jsonObject.get("leaderboardPosition").getAsString();
 
-            embedBuilder.addField("Username", "`" +  profile.getUsername() + "`", true);
-            embedBuilder.addField("Honor", "`" +  jsonObject.get("honor").getAsString() + "`", true);
-            embedBuilder.addField("Clan", "`" +  jsonObject.get("clan").getAsString() + "`", true);
-            if(ranking != null && ranking != "0") embedBuilder.addField("Ranking", "`" +  "#" + ranking + "`", true);
-            embedBuilder.addField("Rank", "`" + overall.get("rank").getAsString() + "`", true);
-            embedBuilder.addField("Score", "`" + overall.get("score").getAsString() + "`", true); 
+            embedBuilder.addField("Username", "```" +  profile.getUsername() + "```", true);
+            embedBuilder.addField("Honor", "```" +  jsonObject.get("honor").getAsString() + "```", true);
+            embedBuilder.addField("Clan", "```" +  jsonObject.get("clan").getAsString() + "```", true);
+            if(ranking != null && ranking != "0") embedBuilder.addField("Ranking", "```" +  "#" + ranking + "```", true);
+            embedBuilder.addField("Rank", "```" + overall.get("rank").getAsString() + "```", true);
+            embedBuilder.addField("Score", "```" + overall.get("score").getAsString() + "```", true); 
             
             if(challenges.getMostDifficultChallenge().isPresent()){
                 Challenge challenge = challenges.getMostDifficultChallenge().get();
-                embedBuilder.addField("Best Kata (" + challenge.getKataInformation().getRank().getDifficulty() + " Kyu)", "```" + challenge.getName() + System.lineSeparator() + "```    ", true);   
+                // embedBuilder.addField("Best Kata (" + challenge.getKataInformation().getRank().getDifficulty() + " Kyu)", "```" + challenge.getName() + System.lineSeparator() + "```    ", true);   
+                embedBuilder.addField("Best Kata", "```" + challenge.getKataInformation().getRank().getDifficulty() + " Kyu```", true); 
+                
+                
+                color = challenge.getKataInformation().getRank().getColorEnum();
+                embedBuilder.setColor(color);
             }          
+
+            embedBuilder.addField("Completed Kata", "```" + completed.size() + "```", true);
+
+            Set<String> languages = new HashSet<>();
+
+            for(Challenge challenge : completed){
+                List<String> languagesList = challenge.getCompletedLanguages();
+                languages.addAll(languagesList);
+            }
+
+            String languagesString = String.join(", ", languages);
+
+            embedBuilder.addField("Languages", "```" + languagesString + "```", true);
         }
 
         
@@ -79,7 +101,7 @@ public abstract class CodeWarsCommand extends Command{
             EmbedBuilder builder = new EmbedBuilder();
 
             builder.setTitle("Finished katas.");
-            builder.setColor(Color.green);
+            builder.setColor(color);
             builder.setThumbnail(this.dependencies.getDiscord().getSelfUser().getAvatarUrl());
 
             for(int j = i; j < i + AMOUNT; j++){
