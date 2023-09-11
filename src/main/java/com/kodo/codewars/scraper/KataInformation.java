@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -24,6 +25,13 @@ public class KataInformation {
 
     public List<CodewarsKata> getChallenges() {
         return new ArrayList<>(this.katas.values());
+    }
+
+    public Optional<CodewarsKata> getChallenge(String id){
+        if(this.katas.containsKey(id)){
+            return Optional.of(this.katas.get(id));
+        }
+        return Optional.empty();
     }
 
     public CodewarsKata getRandomChallenge(){

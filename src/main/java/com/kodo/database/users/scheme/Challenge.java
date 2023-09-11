@@ -2,6 +2,9 @@ package com.kodo.database.users.scheme;
 
 import java.util.List;
 
+import com.kodo.bot.Kodo;
+import com.kodo.codewars.scraper.CodewarsKata;
+
 public class Challenge {
     private String id;
     private String name;
@@ -57,5 +60,17 @@ public class Challenge {
 
     public void setCompletedLanguages(List<String> completedLanguages) {
         this.completedLanguages = completedLanguages;
+    }
+
+    @SuppressWarnings("deprecation")
+    public CodewarsKata getKataInformation(){
+        return Kodo.getInstance()
+                        .getDependencies()
+                        .getStorage()
+                        .getCodewarsStorage()
+                        .getChallenges()
+                        .getKataInformation()
+                        .getChallenge(this.getId())
+                        .orElseGet(null);
     }
 }

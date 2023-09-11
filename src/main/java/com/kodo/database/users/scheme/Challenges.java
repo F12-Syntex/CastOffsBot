@@ -3,6 +3,7 @@ package com.kodo.database.users.scheme;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class Challenges {
@@ -17,6 +18,12 @@ public class Challenges {
 
     public void addCachedPage(int page) {
         this.cachedPages.add(page);
+    }
+
+    public Optional<Challenge> getMostDifficultChallenge() {
+        return this.challenges.stream()
+                .sorted((a, b) -> a.getKataInformation().getRank().getDifficulty() - b.getKataInformation().getRank().getDifficulty())
+                .findFirst();
     }
 
     public boolean isPageCached(int page) {
