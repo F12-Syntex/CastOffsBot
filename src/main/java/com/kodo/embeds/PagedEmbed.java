@@ -125,8 +125,6 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
     @Nonnull
     @Override
     public MessageEmbed build(){
-        //print the class, line number and method that called this function
-        System.out.println("page: " + this.page + " pages: " + this.pages.size());
         return pages.get(page).setFooter("Showing page " + (this.page+1) + "/" + this.pages.size()).build();
     }
     
@@ -138,17 +136,16 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
         super();
         Kodo.getInstance().getDiscord().addEventListener(this);
 
-        //automatically kill this listener after 5 minutes
-        // new java.util.Timer().schedule(
-        //     new java.util.TimerTask() {
-        //         @Override
-        //         public void run() {
-        //             Kodo.getInstance().getDiscord().removeEventListener(PagedEmbed.this);
-        //         }
-        //     },
-        //     1000 * 60 * 5
-        // );
-
+        // automatically kill this listener after 5 minutes
+        new java.util.Timer().schedule(
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    Kodo.getInstance().getDiscord().removeEventListener(PagedEmbed.this);
+                }
+            },
+            1000 * 60 * 5
+        );
     }
 
     public void setPage(int page){

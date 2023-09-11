@@ -47,6 +47,8 @@ public class Profile extends CodeWarsCommand {
                                                      .get()
                                                      .getCompletedKatas()
                                                      .getChallenges();
+            
+
 
             PagedEmbed builder = this.getProfileEmbed(profile, challenges);
 

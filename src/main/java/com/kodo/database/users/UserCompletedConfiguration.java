@@ -1,6 +1,7 @@
 package com.kodo.database.users;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.kodo.database.UsersConfiguration;
@@ -28,6 +29,7 @@ public class UserCompletedConfiguration extends UsersConfiguration {
             String username = this.config.getUserName();
             this.challenges = this.dependencies.getCodeWars().getApi().getAllCompletedChallenges(username);
             this.save(challenges);
+            Logger.getGlobal().warning("set " + username + "completed katas to " + challenges.getChallenges().size() + "");
             return;
         } else {
             gson = contents;

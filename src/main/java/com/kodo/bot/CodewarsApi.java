@@ -13,7 +13,6 @@ import com.kodo.codewars.CodeWars;
 import com.kodo.database.users.scheme.Challenge;
 import com.kodo.database.users.scheme.Challenges;
 import com.kodo.database.users.scheme.User;
-import com.kodo.handler.Dependencies;
 
 public class CodewarsApi {
 
@@ -99,6 +98,10 @@ public class CodewarsApi {
                     
                     //convert it to a challenge
                     Challenge challenge = gson.fromJson(object, Challenge.class);
+
+                    if(challenges.containsChallenge(challenge.getId())){
+                        return;
+                    }
 
                     //set the page
                     challenges.addChallenge(challenge, PAGE);
