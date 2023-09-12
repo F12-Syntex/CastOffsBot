@@ -25,6 +25,11 @@ public class UserConfiguration extends Storage{
         this.completedKatas = new UserCompletedConfiguration(this, DirectoryUtils.directoryBuilder(directory, "completed_katas.json"), dependencies);
     }
 
+    public void update(){
+        this.profile.update();
+        this.completedKatas.update();
+    }
+
     @Override
     public void load() {
         

@@ -1,4 +1,4 @@
-package com.kodo.codewars.events;
+package com.kodo.codewars.scheduled;
 
 import java.util.ArrayList;
 import java.util.Arrays;

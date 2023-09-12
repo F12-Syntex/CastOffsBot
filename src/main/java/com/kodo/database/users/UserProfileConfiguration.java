@@ -43,6 +43,12 @@ public class UserProfileConfiguration extends UsersConfiguration{
         this.save(user);
     }
 
+    @Override
+    public void update() {
+        this.user = this.dependencies.getCodeWars().getApi().getProfileData(this.config.getUserName());
+        this.save(user);
+    }
+
     public void setUser(User user){
         this.user = user;
         this.save(user);

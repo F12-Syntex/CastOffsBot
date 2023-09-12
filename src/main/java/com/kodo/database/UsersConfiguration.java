@@ -22,5 +22,7 @@ public abstract class UsersConfiguration extends Configuration {
         this.config = userConfiguration;
     }
 
+    public abstract void update();
+
     
 }

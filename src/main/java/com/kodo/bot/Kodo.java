@@ -6,7 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.kodo.codewars.CodeWars;
-import com.kodo.codewars.events.IntervalChallenge;
+import com.kodo.codewars.scheduled.IntervalChallenge;
+import com.kodo.codewars.scheduled.UserUpdater;
 import com.kodo.commands.CommandHandler;
 import com.kodo.database.StorageManager;
 import com.kodo.handler.Dependencies;
@@ -25,6 +26,8 @@ public final class Kodo extends ListenerAdapter {
 
     private IntervalChallenge dailyChallenges;
     private IntervalChallenge weeklyChallenges;
+
+    private UserUpdater userUpdater;
 
     private final Dependencies dependencies = new Dependencies();
     
@@ -86,6 +89,9 @@ public final class Kodo extends ListenerAdapter {
             //start challenges when jda is ready
             this.discord.awaitReady();
 
+            this.userUpdater = new UserUpdater(this.dependencies);
+            dependencies.setUserUpdater(userUpdater);
+
             this.dailyChallenges = new IntervalChallenge(this.dependencies, 1, java.util.concurrent.TimeUnit.DAYS, 5, 8, "daily-challenges");
             this.dailyChallenges.sendKata();
 
@@ -135,6 +141,10 @@ public final class Kodo extends ListenerAdapter {
 
     public Dependencies getDependencies() {
         return dependencies;
+    }
+
+    public IntervalChallenge getDailyChallenges() {
+        return dailyChallenges;
     }
 
 }

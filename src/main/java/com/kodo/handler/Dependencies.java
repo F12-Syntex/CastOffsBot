@@ -1,7 +1,8 @@
 package com.kodo.handler;
 
 import com.kodo.codewars.CodeWars;
-import com.kodo.codewars.events.IntervalChallenge;
+import com.kodo.codewars.scheduled.IntervalChallenge;
+import com.kodo.codewars.scheduled.UserUpdater;
 import com.kodo.commands.CommandHandler;
 import com.kodo.database.StorageManager;
 
@@ -18,6 +19,8 @@ public class Dependencies {
     
     private IntervalChallenge dailyChallenges;
     private IntervalChallenge weeklyChallenges;
+
+    private UserUpdater userUpdater;
 
     public void setBuilder(JDABuilder builder) {
         this.builder = builder;
@@ -47,6 +50,10 @@ public class Dependencies {
         this.weeklyChallenges = weeklyChallenges;
     }
 
+    public void setUserUpdater(UserUpdater userUpdater) {
+        this.userUpdater = userUpdater;
+    }
+
     public JDABuilder getBuilder() {
         return builder;
     }
@@ -73,6 +80,10 @@ public class Dependencies {
 
     public IntervalChallenge getWeeklyChallenges() {
         return weeklyChallenges;
+    }
+
+    public UserUpdater getUserUpdater() {
+        return userUpdater;
     }
     
 }

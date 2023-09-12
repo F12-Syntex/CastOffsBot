@@ -1,6 +1,7 @@
 package com.kodo.database.users;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +27,10 @@ public class UserStorage extends Storage{
                 this.registerUser(file.getName(), null);
             }
         }
+    }
+
+    public Collection<UserConfiguration> getUsers(){
+        return this.users.values();
     }
 
     public UserConfiguration registerUser(String userName, User user) {

@@ -29,6 +29,7 @@ public abstract class CodeWarsCommand extends Command{
 
     protected PagedEmbed getProfileEmbed(User profile, Challenges challenges){
         EmbedBuilder embedBuilder = new EmbedBuilder();
+        
 
         List<Challenge> completed = challenges.getChallenges();
 
@@ -59,6 +60,8 @@ public abstract class CodeWarsCommand extends Command{
             embedBuilder.setTitle(profile.getUsername(), "https://www.codewars.com/users/" + profile.getUsername());
             embedBuilder.setColor(color);
             embedBuilder.setThumbnail(this.dependencies.getDiscord().getSelfUser().getAvatarUrl());
+
+            embedBuilder.setDescription("Data will be updated in " + this.dependencies.getUserUpdater().getTimeTillUpdate());
 
             String ranking = jsonObject.get("leaderboardPosition").getAsString();
 

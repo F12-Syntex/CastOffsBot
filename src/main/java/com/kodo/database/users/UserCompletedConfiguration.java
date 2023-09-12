@@ -40,6 +40,12 @@ public class UserCompletedConfiguration extends UsersConfiguration {
     }
 
     @Override
+    public void update() {
+        this.challenges = this.dependencies.getCodeWars().getApi().getAllCompletedChallenges(this.config.getUserName());
+        this.save(challenges);
+    }
+
+    @Override
     public Class<?> jsonType() {
         return Challenge.class;
     }
