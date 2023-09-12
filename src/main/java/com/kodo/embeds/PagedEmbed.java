@@ -106,7 +106,11 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
             
             if(btnId == null) return;
 
-            if(messageEvent.getUser().getId() != this.hook.getInteraction().getUser().getId()) return;
+            if(!messageEvent.getUser().getId().equals(this.hook.getInteraction().getUser().getId())){
+                EmbedBuilder errorEmbed = EmbedMaker.ERROR(messageEvent.getUser(), "You can't do that.", "You can't react to someone else's embed!");
+                messageEvent.replyEmbeds(errorEmbed.build()).setEphemeral(true).queue();
+                return;
+            }
 
             if(btnId.equals(nextId)){
                 this.nextPage();
