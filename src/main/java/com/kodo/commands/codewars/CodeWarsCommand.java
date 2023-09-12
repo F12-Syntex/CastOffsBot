@@ -35,6 +35,15 @@ public abstract class CodeWarsCommand extends Command{
         completed.sort((a, b) -> {
             int aRank = a.getKataInformation().getRank().getDifficulty();
             int bRank = b.getKataInformation().getRank().getDifficulty();
+
+            if(a.isRetired()){
+                return 1;
+            }
+
+            if(b.isRetired()){
+                return -1;
+            }
+
             return aRank - bRank;
         });
 
@@ -57,8 +66,8 @@ public abstract class CodeWarsCommand extends Command{
             embedBuilder.addField("Honor", "```" +  jsonObject.get("honor").getAsString() + "```", true);
             embedBuilder.addField("Clan", "```" +  jsonObject.get("clan").getAsString() + "```", true);
             if(ranking != null && ranking != "0") embedBuilder.addField("Ranking", "```" +  "#" + ranking + "```", true);
-            embedBuilder.addField("Rank", "```" + overall.get("rank").getAsString() + "```", true);
-            embedBuilder.addField("Score", "```" + overall.get("score").getAsString() + "```", true); 
+            embedBuilder.addField("Rank", "```" + overall.get("rank").getAsString().replace("-", "") + "```", true);
+            embedBuilder.addField("Score", "```" + overall.get("score").getAsString().replace("-", "") + "```", true); 
             
             if(challenges.getMostDifficultChallenge().isPresent()){
                 Challenge challenge = challenges.getMostDifficultChallenge().get();
@@ -109,9 +118,15 @@ public abstract class CodeWarsCommand extends Command{
                 Challenge challenge = completed.get(j);
                 String indexString = String.format("%0" + lengthOfNumber + "d", ++pos);
 
+                String difficulty = "retired";
+
+                if(!challenge.isRetired()){
+                    difficulty = challenge.getKataInformation().getRank().getDifficulty() + " kyu";
+                }
+
                 builder.appendDescription("`" + indexString + "`" 
                                             + ": [" + challenge.getName() + "](" + "https://www.codewars.com/kata/" + challenge.getId() + ")" 
-                                            + " `" + challenge.getKataInformation().getRank().getDifficulty() + " kyu`"
+                                            + " `" + difficulty + "`"
                                             + System.lineSeparator()
                                             );
             }

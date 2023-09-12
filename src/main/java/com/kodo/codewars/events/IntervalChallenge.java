@@ -134,7 +134,9 @@ public class IntervalChallenge implements EventListener{
                             .withUrl(challenge.getUrl())
                             .withStyle(ButtonStyle.LINK);
 
-                        channel.sendMessageEmbeds(embedBuilder.build()).setActionRow(button).queue();
+                        if(channel.canTalk()){
+                            channel.sendMessageEmbeds(embedBuilder.build()).setActionRow(button).queue();
+                        }
                     });
                 });
 

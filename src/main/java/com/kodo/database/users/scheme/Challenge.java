@@ -1,6 +1,7 @@
 package com.kodo.database.users.scheme;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.kodo.bot.Kodo;
 import com.kodo.codewars.scraper.CodewarsKata;
@@ -62,6 +63,10 @@ public class Challenge {
         this.completedLanguages = completedLanguages;
     }
 
+    public boolean isRetired(){
+        return this.getKataInformation().isRetired();
+    }
+
     @SuppressWarnings("deprecation")
     public CodewarsKata getKataInformation(){
         return Kodo.getInstance()
@@ -71,6 +76,6 @@ public class Challenge {
                         .getChallenges()
                         .getKataInformation()
                         .getChallenge(this.getId())
-                        .orElseGet(null);
+                        .orElseGet(() -> CodewarsKata.getRetired(this));
     }
 }

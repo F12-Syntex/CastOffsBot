@@ -1,7 +1,10 @@
 package com.kodo.codewars.scraper;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
+
+import com.kodo.database.users.scheme.Challenge;
 
 public class CodewarsKata {
     private String id;
@@ -21,8 +24,58 @@ public class CodewarsKata {
     private int voteScore;
     private String publishedAt;
     private String approvedAt;
+    private boolean retired;
+
+    public static CodewarsKata getRetired(Challenge challenge){
+
+        CodewarsKata kata = new CodewarsKata();
+        kata.setId(challenge.getId());
+        kata.setName(challenge.getName());
+        kata.setSlug(challenge.getSlug());
+        
+        //set the rest to their default values
+        kata.setCategory("retired");
+        kata.setDescription("This kata has been retired");  
+        kata.setTotalAttempts(0);
+        kata.setTotalCompleted(0);
+        kata.setTotalStars(0);
+        kata.setVoteScore(0);
+        kata.setPublishedAt("N/A");
+        kata.setApprovedAt("N/A");
+        
+        Rank retiredRank = new Rank();
+        retiredRank.setColor("gray");
+        retiredRank.setName("retired");
+        retiredRank.setId(9);
+        kata.setRank(retiredRank);
+
+        kata.setTags(Arrays.asList("retired"));
+        kata.setLanguages(Arrays.asList("retired"));
+
+        CreatedBy createdBy = new CreatedBy();
+        createdBy.setUsername("retired");
+        createdBy.setUrl("https://www.codewars.com/users/retired");
+        kata.setCreatedBy(createdBy);
+
+        ApprovedBy approvedBy = new ApprovedBy();
+        approvedBy.setUsername("retired");
+        approvedBy.setUrl("https://www.codewars.com/users/retired");
+        kata.setApprovedBy(approvedBy);
+
+        kata.setRetired(true);
+        
+        return kata;
+    }
+
+    public CodewarsKata(){
+        this.retired = false;
+    }
 
     // Getters and Setters
+
+    public boolean isRetired() {
+        return retired;
+    }
 
     public String getId() {
         return id;
@@ -54,6 +107,10 @@ public class CodewarsKata {
         }
         return this.url;
         
+    }
+
+    public void setRetired(boolean retired) {
+        this.retired = retired;
     }
 
     public void setUrl(String url) {
