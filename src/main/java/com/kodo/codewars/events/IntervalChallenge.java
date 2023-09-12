@@ -3,6 +3,7 @@ package com.kodo.codewars.events;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +36,7 @@ public class IntervalChallenge implements EventListener{
 
     private final String CHANNEL_NAME;
 
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
     
     @Override
     public void onEvent(@Nonnull GenericEvent event) {
@@ -87,6 +89,7 @@ public class IntervalChallenge implements EventListener{
 
     @SuppressWarnings("null")
     public void sendKata(){
+        executorService.submit(() -> {
             try {
 
                 final CodewarsKata challenge = this.getRandomKata();
@@ -139,7 +142,8 @@ public class IntervalChallenge implements EventListener{
                 // Handle any exceptions that might occur during execution
                 e.printStackTrace();
             }
-        }
+        });
+    }
 
     // Method to stop the scheduler when no longer needed
     public void stopHost() {
