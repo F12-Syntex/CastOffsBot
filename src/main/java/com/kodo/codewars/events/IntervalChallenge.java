@@ -6,13 +6,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.core.config.builder.api.LoggableComponentBuilder;
-
 import com.kodo.codewars.scraper.CodewarsKata;
 import com.kodo.handler.Dependencies;
 import com.kodo.handler.ListUtils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
@@ -28,7 +27,9 @@ public class IntervalChallenge {
     private final int MIN_DIFFICULTY;
     private final int MAX_DIFFICULTY;
 
-    public IntervalChallenge(Dependencies dependencies, long interval, TimeUnit unit, int MIN_DIFFICULTY, int MAX_DIFFICULTY) {
+    private final String CHANNEL_NAME;
+
+    public IntervalChallenge(Dependencies dependencies, long interval, TimeUnit unit, int MIN_DIFFICULTY, int MAX_DIFFICULTY, String channelName) {
         this.dependencies = dependencies;
 
         this.interval = interval;
@@ -37,16 +38,23 @@ public class IntervalChallenge {
         this.MIN_DIFFICULTY = MIN_DIFFICULTY;
         this.MAX_DIFFICULTY = MAX_DIFFICULTY;
 
+        this.CHANNEL_NAME = channelName;
+
         Logger.getGlobal().info("IntervalChallenge created with interval: " + interval + " " + unit.toString());
     }
 
-    @SuppressWarnings("null")
     public void host(){
         // Create a scheduler with a single thread
         scheduler = Executors.newSingleThreadScheduledExecutor();
 
         // Schedule the code to run every day at a specific time (e.g., 12:00 AM)
         scheduler.scheduleAtFixedRate(() -> {
+            this.sendKata();
+        }, 0L, 1L, TimeUnit.HOURS);
+    }
+
+    @SuppressWarnings("null")
+    public void sendKata(){
             try {
                 
                 final int MAX_DESCRIPTION_LENGTH = 800;
@@ -62,16 +70,29 @@ public class IntervalChallenge {
                                 .filter(kata -> kata.getRank().getDifficulty() <= MAX_DIFFICULTY &&
                                                 kata.getRank().getDifficulty() >= MIN_DIFFICULTY &&
                                                 kata.getDescription().length() < MAX_DESCRIPTION_LENGTH &&
+                                                kata.getCategory().equals("algorithms") &&
                                                 kata.getLanguages().contains("java") ||
                                                 kata.getLanguages().contains("python")
                                 ).collect(Collectors.toList()));
 
                 dependencies.getDiscord().getGuilds().forEach(guild -> {
-                    guild.getTextChannels().stream().filter(channel -> channel.getName().equals("daily-challenges")).forEach(channel -> {
+                    guild.getTextChannels().stream().filter(channel -> channel.getName().equals(this.CHANNEL_NAME)).forEach(channel -> {
                         
+
+                        //check time since last challenge
+                        Message lastMessage = channel.getHistory().retrievePast(1).complete().get(0);
+                        long timeSinceLastChallenge = System.currentTimeMillis() - lastMessage.getTimeCreated().toInstant().toEpochMilli();
+
+                        //check if last challenge was sent more than this.interval this.unit ago
+                        if(timeSinceLastChallenge < this.unit.toMillis(this.interval)){
+                            return;
+                        }
+
                         EmbedBuilder embedBuilder = new EmbedBuilder();
                         embedBuilder.setColor(challenge.getRank().getColorEnum());
                         embedBuilder.setTitle(challenge.getName(), challenge.getUrl());
+
+                        
 
                         String description = challenge.getDescription();
 
@@ -94,8 +115,7 @@ public class IntervalChallenge {
                 // Handle any exceptions that might occur during execution
                 e.printStackTrace();
             }
-        }, 0L, this.interval, this.unit);
-    }
+        }
 
     // Method to stop the scheduler when no longer needed
     public void stopHost() {

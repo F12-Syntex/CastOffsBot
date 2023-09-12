@@ -83,10 +83,13 @@ public final class Kodo extends ListenerAdapter {
             this.discord.addEventListener(this.commandHandler);
             dependencies.setCommandHandler(commandHandler);
 
-            this.dailyChallenges = new IntervalChallenge(this.dependencies, 1, java.util.concurrent.TimeUnit.DAYS, 5, 8);
+            //start challenges when jda is ready
+            this.discord.awaitReady();
+
+            this.dailyChallenges = new IntervalChallenge(this.dependencies, 1, java.util.concurrent.TimeUnit.DAYS, 5, 8, "daily-challenges");
             this.dailyChallenges.host();
 
-            this.weeklyChallenges = new IntervalChallenge(this.dependencies, 7, java.util.concurrent.TimeUnit.DAYS, 4, 5);
+            this.weeklyChallenges = new IntervalChallenge(this.dependencies, 7, java.util.concurrent.TimeUnit.DAYS, 4, 5, "weekly-challenges");
             this.weeklyChallenges.host();
 
             this.dependencies.setDailyChallenges(this.dailyChallenges);
