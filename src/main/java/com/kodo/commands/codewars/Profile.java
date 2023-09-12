@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kodo.commands.CommandMeta;
+import com.kodo.database.Storage;
+import com.kodo.database.users.UserConfiguration;
+import com.kodo.database.users.UserProfileConfiguration;
+import com.kodo.database.users.UserStorage;
 import com.kodo.database.users.scheme.Challenges;
 import com.kodo.database.users.scheme.User;
 import com.kodo.embeds.EmbedMaker;
@@ -36,20 +40,19 @@ public class Profile extends CodeWarsCommand {
 
         EmbedMaker.runAsyncTask(event, () -> {
 
+            UserStorage storage = this.dependencies.getStorage().getUserStorage();
+
+            if(!storage.isRegistered(username)){
+                throw new IllegalArgumentException("User is not registered");
+            }
+
+            UserConfiguration config = storage.getUser(username);
+
             //display user data from the api
-            User profile = this.dependencies.getCodeWars().getApi().getProfileData(username);
+            User profile = config.getProfile().getUser();
 
-            this.dependencies.getCodeWars().getApi().reCacheChallenges(username);
-
-            Challenges challenges = this.dependencies.getStorage()
-                                                     .getUserStorage()
-                                                     .getUserData(username)
-                                                     .get()
-                                                     .getCompletedKatas()
-                                                     .getChallenges();
+            Challenges challenges = config.getCompletedKatas().getChallenges();
             
-
-
             PagedEmbed builder = this.getProfileEmbed(profile, challenges);
 
             builder.setDescription(profile.getUsername() + " profile");
@@ -57,10 +60,6 @@ public class Profile extends CodeWarsCommand {
             Button button = Button.primary("codewars_profile", "View Profile")
                 .withUrl("https://www.codewars.com/users/" + profile.getUsername())
                 .withStyle(ButtonStyle.LINK);
-
-            // System.out.println("Sending embed");
-            // event.getHook().editOriginalEmbeds(builder.build()).setActionRow(button).queue();
-            // event.replyEmbeds(builder.build()).addActionRow(button).queue();
 
             List<Button> buttons = new ArrayList<>();
             buttons.add(button);

@@ -1,7 +1,6 @@
 package com.kodo.database.users.scheme;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.kodo.bot.Kodo;
 import com.kodo.codewars.scraper.CodewarsKata;

@@ -22,7 +22,7 @@ public class Challenges {
 
     public Optional<Challenge> getMostDifficultChallenge() {
         return this.challenges.stream()
-                .filter(challenge -> !challenge.isRetired())
+                .filter(challenge -> challenge.getKataInformation().getRank().getDifficulty() > 1)
                 .sorted((a, b) -> a.getKataInformation().getRank().getDifficulty() - b.getKataInformation().getRank().getDifficulty())
                 .findFirst();
     }

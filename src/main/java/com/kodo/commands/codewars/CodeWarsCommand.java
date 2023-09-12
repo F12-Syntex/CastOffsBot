@@ -36,11 +36,11 @@ public abstract class CodeWarsCommand extends Command{
             int aRank = a.getKataInformation().getRank().getDifficulty();
             int bRank = b.getKataInformation().getRank().getDifficulty();
 
-            if(a.isRetired()){
+            if(a.getKataInformation().getRank().getDifficulty() <= 0){
                 return 1;
             }
 
-            if(b.isRetired()){
+            if(b.getKataInformation().getRank().getDifficulty() <= 0){
                 return -1;
             }
 
