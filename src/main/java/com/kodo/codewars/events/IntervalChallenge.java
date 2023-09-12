@@ -1,5 +1,8 @@
 package com.kodo.codewars.events;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -53,54 +56,74 @@ public class IntervalChallenge {
         }, 0L, 1L, TimeUnit.HOURS);
     }
 
+    private CodewarsKata getRandomKata(){
+
+        final int MAX_DESCRIPTION_LENGTH = 800;
+
+        List<CodewarsKata> candidates = new ArrayList<>();
+
+        List<CodewarsKata> katas = this.dependencies
+                                        .getStorage()
+                                        .getCodewarsStorage()
+                                        .getChallenges()
+                                        .getKataInformation()
+                                        .getChallenges();
+
+        for(CodewarsKata kata : katas){
+            if(kata.getRank().getDifficulty() > MAX_DIFFICULTY) continue;
+            if(kata.getRank().getDifficulty() < MIN_DIFFICULTY) continue;
+            if(kata.getDescription().length() > MAX_DESCRIPTION_LENGTH) continue;
+            if(!kata.getCategory().equals("algorithms")) continue;
+            if(kata.getTags().contains("Mathematics")) continue;
+            if(kata.getTags().contains("Puzzles")) continue;
+            if(kata.getTags().contains("Games")) continue;
+            if(!kata.getLanguages().contains("java") && !kata.getLanguages().contains("python")) continue;
+            candidates.add(kata);
+        }
+
+        return ListUtils.getRandomElement(candidates);
+    }
+
     @SuppressWarnings("null")
     public void sendKata(){
             try {
+
+                final CodewarsKata challenge = this.getRandomKata();
                 
-                final int MAX_DESCRIPTION_LENGTH = 800;
-
-                final CodewarsKata challenge = ListUtils.getRandomElement(
-                                this.dependencies
-                                .getStorage()
-                                .getCodewarsStorage()
-                                .getChallenges()
-                                .getKataInformation()
-                                .getChallenges()
-                                .stream()
-                                .filter(kata -> kata.getRank().getDifficulty() <= MAX_DIFFICULTY &&
-                                                kata.getRank().getDifficulty() >= MIN_DIFFICULTY &&
-                                                kata.getDescription().length() < MAX_DESCRIPTION_LENGTH &&
-                                                kata.getCategory().equals("algorithms") &&
-                                                kata.getLanguages().contains("java") ||
-                                                kata.getLanguages().contains("python")
-                                ).collect(Collectors.toList()));
-
                 dependencies.getDiscord().getGuilds().forEach(guild -> {
                     guild.getTextChannels().stream().filter(channel -> channel.getName().equals(this.CHANNEL_NAME)).forEach(channel -> {
                         
 
                         //check time since last challenge
-                        Message lastMessage = channel.getHistory().retrievePast(1).complete().get(0);
-                        long timeSinceLastChallenge = System.currentTimeMillis() - lastMessage.getTimeCreated().toInstant().toEpochMilli();
+                        List<Message> messages = channel.getHistory().retrievePast(1).complete();
 
-                        //check if last challenge was sent more than this.interval this.unit ago
-                        if(timeSinceLastChallenge < this.unit.toMillis(this.interval)){
-                            return;
+                        if(!messages.isEmpty()){
+                            Message lastMessage = messages.get(0);
+
+                            long timeSinceLastChallenge = System.currentTimeMillis() - lastMessage.getTimeCreated().toInstant().toEpochMilli();
+
+                            //check if last challenge was sent more than this.interval this.unit ago
+                            if(timeSinceLastChallenge < this.unit.toMillis(this.interval)){
+                                return;
+                            }
                         }
 
                         EmbedBuilder embedBuilder = new EmbedBuilder();
                         embedBuilder.setColor(challenge.getRank().getColorEnum());
                         embedBuilder.setTitle(challenge.getName(), challenge.getUrl());
-
-                        
+          
+                        embedBuilder.addField("Rank", "```" + challenge.getRank().getDifficulty() + " Kyu```", true);
+                        embedBuilder.addField("Category", "```" + challenge.getCategory() + "```", true);
+                        embedBuilder.addField("Tags", "```" + Arrays.toString(challenge.getTags().toArray()) + "```", false);
+                        embedBuilder.addField("Languages", "```" + Arrays.toString(challenge.getLanguages().toArray()) + "```", false);
 
                         String description = challenge.getDescription();
 
-                        if(description.length() > 4000){
+                        if(description.length() > 1000){
                             description = description.substring(0, 4000) + "...";
                         }
 
-                        embedBuilder.setDescription(description);
+                        embedBuilder.addField("Description", description , false); 
 
                         
                         Button button = Button.primary("codewars_profile", "View Kata")
