@@ -106,6 +106,7 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
             
             if(btnId == null) return;
 
+            if(messageEvent.getUser().getId() != this.hook.getInteraction().getUser().getId()) return;
 
             if(btnId.equals(nextId)){
                 this.nextPage();
