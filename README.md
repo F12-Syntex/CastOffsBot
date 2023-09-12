@@ -18,8 +18,8 @@ Welcome to the Kodo hackathon project! This Discord bot is being developed as pa
 
 ## Feature To-Do List
 
-- [ ] Weekly challenges
-- [ ] Daily challenges
+- [x] Weekly challenges
+- [x] Daily challenges
 - [ ] Currency gained through challenges
 - [ ] Ranking
 - [ ] Time taken to beat kata
