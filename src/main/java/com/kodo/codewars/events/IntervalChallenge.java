@@ -7,7 +7,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
 
 import com.kodo.codewars.scraper.CodewarsKata;
 import com.kodo.handler.Dependencies;
@@ -15,10 +16,12 @@ import com.kodo.handler.ListUtils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
-public class IntervalChallenge {
+public class IntervalChallenge implements EventListener{
 
     private ScheduledExecutorService scheduler;
 
@@ -32,6 +35,12 @@ public class IntervalChallenge {
 
     private final String CHANNEL_NAME;
 
+    
+    @Override
+    public void onEvent(@Nonnull GenericEvent event) {
+        this.sendKata();
+    }
+
     public IntervalChallenge(Dependencies dependencies, long interval, TimeUnit unit, int MIN_DIFFICULTY, int MAX_DIFFICULTY, String channelName) {
         this.dependencies = dependencies;
 
@@ -44,16 +53,8 @@ public class IntervalChallenge {
         this.CHANNEL_NAME = channelName;
 
         Logger.getGlobal().info("IntervalChallenge created with interval: " + interval + " " + unit.toString());
-    }
 
-    public void host(){
-        // Create a scheduler with a single thread
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-
-        // Schedule the code to run every day at a specific time (e.g., 12:00 AM)
-        scheduler.scheduleAtFixedRate(() -> {
-            this.sendKata();
-        }, 0L, 1L, TimeUnit.HOURS);
+        this.dependencies.getDiscord().addEventListener(this);
     }
 
     private CodewarsKata getRandomKata(){

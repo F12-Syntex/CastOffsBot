@@ -87,10 +87,10 @@ public final class Kodo extends ListenerAdapter {
             this.discord.awaitReady();
 
             this.dailyChallenges = new IntervalChallenge(this.dependencies, 1, java.util.concurrent.TimeUnit.DAYS, 5, 8, "daily-challenges");
-            this.dailyChallenges.host();
+            this.dailyChallenges.sendKata();
 
             this.weeklyChallenges = new IntervalChallenge(this.dependencies, 7, java.util.concurrent.TimeUnit.DAYS, 4, 5, "weekly-challenges");
-            this.weeklyChallenges.host();
+            this.weeklyChallenges.sendKata();
 
             this.dependencies.setDailyChallenges(this.dailyChallenges);
             this.dependencies.setWeeklyChallenges(this.weeklyChallenges);
