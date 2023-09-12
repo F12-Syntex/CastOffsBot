@@ -33,8 +33,6 @@ Welcome to the Kodo hackathon project! This Discord bot is being developed as pa
 
 Please feel free to add more ideas to this list or suggest improvements to existing features. Let's make this Discord bot amazing together!
 
-Sure! Here's the updated "How to Contribute" section with the instructions you requested:
-
 ## How to Contribute
 Thank you for your interest in contributing to the Kodo hackathon project! Follow the steps below to get started:
 
@@ -71,7 +69,7 @@ Thank you for your interest in contributing to the Kodo hackathon project! Follo
 
 7. **Create a pull request**: Once you have pushed your changes to your forked repository, navigate to the original repository (https://github.com/F12-Syntex/Kodo) on GitHub. Click on the "Compare & pull request" button to create a pull request.
 
-8. **Review and merge the pull request**: The project maintainer will review your pull request, provide feedback if needed, and then merge it if everything looks good.
+8. **Review and merge the pull request**: I will review your pull request, provide feedback if needed, and then merge it if everything looks good.
 
 That's it! You have successfully contributed to the Kodo hackathon project. Thank you for your contribution!
 
