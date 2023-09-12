@@ -11,17 +11,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kodo.utils.FileUtils;
 import com.kodo.utils.TaskTracker;
+import com.kodo.utils.WebpageUtils;
 
 public class CodewarsScraper {
 
@@ -92,7 +86,7 @@ public class CodewarsScraper {
 
             String url = "https://www.codewars.com/api/v1/code-challenges/" + id;
 
-            String json = readWebPage(url);
+            String json = WebpageUtils.readWebPage(url);
 
             CodewarsKata kata = new Gson().fromJson(json, CodewarsKata.class);
 
@@ -169,27 +163,6 @@ public class CodewarsScraper {
         }
 
         return content;
-    }
-
-    private String readWebPage(String url) {
-        String html = "";
-
-        try (CloseableHttpClient httpClient = HttpClients.custom().setUserAgent("Mozilla/5.0")
-                .disableCookieManagement().build()) {
-
-            HttpGet httpGet = new HttpGet(url);
-
-            try (CloseableHttpResponse response = httpClient.execute(httpGet)) {
-                HttpEntity entity = response.getEntity();
-                if (entity != null) {
-                    html = EntityUtils.toString(entity);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return html;
     }
 
     public static void main(String[] args) {

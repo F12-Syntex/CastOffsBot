@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kodo.commands.CommandMeta;
-import com.kodo.database.Storage;
 import com.kodo.database.users.UserConfiguration;
-import com.kodo.database.users.UserProfileConfiguration;
 import com.kodo.database.users.UserStorage;
 import com.kodo.database.users.scheme.Challenges;
 import com.kodo.database.users.scheme.User;

@@ -3,7 +3,7 @@ package com.kodo.bot;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
@@ -25,12 +25,14 @@ public class CodewarsApi {
     public User getProfileData(String username){
 
         String url = "https://www.codewars.com/api/v1/users/" + username;
-
         try {
 
             //we use httpclient to make a get request to the url and get the response
             //we then parse the response to a json object and check if the user exists
-            HttpClient httpClient = HttpClientBuilder.create().build();
+            HttpClient httpClient = HttpClients.custom()
+                                            .setUserAgent("Mozilla/5.0")
+                                            .disableCookieManagement().build();
+
             HttpGet request = new HttpGet(url);
 
             //send the request
@@ -74,7 +76,10 @@ public class CodewarsApi {
 
                 //we use httpclient to make a get request to the url and get the response
                 //we then parse the response to a json object and check if the user exists
-                HttpClient httpClient = HttpClientBuilder.create().build();
+                HttpClient httpClient = HttpClients.custom()
+                                            .setUserAgent("Mozilla/5.0")
+                                            .disableCookieManagement().build();
+
                 HttpGet request = new HttpGet(url);
 
                 //send the request
@@ -135,7 +140,10 @@ public class CodewarsApi {
 
                 //we use httpclient to make a get request to the url and get the response
                 //we then parse the response to a json object and check if the user exists
-                HttpClient httpClient = HttpClientBuilder.create().build();
+                HttpClient httpClient = HttpClients.custom()
+                                            .setUserAgent("Mozilla/5.0")
+                                            .disableCookieManagement().build();
+                                            
                 HttpGet request = new HttpGet(url);
 
                 //send the request

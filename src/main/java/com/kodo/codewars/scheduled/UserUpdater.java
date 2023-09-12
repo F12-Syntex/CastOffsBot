@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -23,8 +24,8 @@ public class UserUpdater implements EventListener{
 
     private long lastUpdate = System.currentTimeMillis();
 
-    private final long UPDATE_INTERVAL = 5;
-    private final TimeUnit UPDATE_INTERVAL_UNIT = TimeUnit.MINUTES;
+    private final long UPDATE_INTERVAL = 1;
+    private final TimeUnit UPDATE_INTERVAL_UNIT = TimeUnit.HOURS;
 
     public UserUpdater(Dependencies dependencies) {
         this.executorService = Executors.newFixedThreadPool(THREAD_COUNT);
@@ -56,6 +57,8 @@ public class UserUpdater implements EventListener{
             return;
         }
 
+        this.lastUpdate = System.currentTimeMillis();
+
         UserStorage storage = this.dependencies.getStorage().getUserStorage();
         
         Collection<UserConfiguration> users = storage.getUsers();
@@ -64,6 +67,7 @@ public class UserUpdater implements EventListener{
             executorService.submit(() -> {
                 try {
                     user.update();
+                    Logger.getGlobal().info("updated " + user.getUserName() + "'s profile");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
