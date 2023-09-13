@@ -3,6 +3,7 @@ package com.kodo.embeds;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -17,8 +18,6 @@ import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-
-//TODO: remove paged embeds after certain duration
 public class PagedEmbed extends EmbedBuilder implements EventListener {
 
     private int page = 0;
@@ -154,6 +153,11 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
         return buttons;
     }
 
+    public List<Button> getButtonsAsDisabled(){
+        List<Button> buttons = this.getButtons();
+        return buttons.stream().map(button -> button.asDisabled()).collect(Collectors.toList());
+    }
+
 
     @Nonnull
     @Override
@@ -164,7 +168,7 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
     /**
      * 
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "null"})
     public PagedEmbed(){
         super();
         Kodo.getInstance().getDiscord().addEventListener(this);
@@ -174,6 +178,9 @@ public class PagedEmbed extends EmbedBuilder implements EventListener {
             new java.util.TimerTask() {
                 @Override
                 public void run() {
+                    List<Button> buttons = PagedEmbed.this.getButtonsAsDisabled();
+                    EmbedBuilder staticPage = PagedEmbed.this;
+                    PagedEmbed.this.hook.editOriginalEmbeds(staticPage.build()).setActionRow(buttons).queue();
                     Kodo.getInstance().getDiscord().removeEventListener(PagedEmbed.this);
                 }
             },

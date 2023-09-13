@@ -53,20 +53,20 @@ public class Leaderboard extends CodeWarsCommand {
             StringBuilder ranks = new StringBuilder();
             StringBuilder names = new StringBuilder();
             StringBuilder scores = new StringBuilder();
-            StringBuilder completed = new StringBuilder();
+            // StringBuilder completed = new StringBuilder();
 
             for (int j = i; j < i+PAGE_SIZE && j < users.size(); j++) {
                 User user = users.get(j);
                 names.append(this.getEmojiForRank(rank) + user.getUsername()).append("\n");
                 ranks.append("#" + (++rank)).append("\n");
                 scores.append(user.getHonor()).append("\n");
-                completed.append(user.getCodeChallenges().getTotalCompleted()).append("\n");
+                // completed.append(user.getCodeChallenges().getTotalCompleted()).append("\n");
             }
 
             currentPage.addField("Rank", "`" + ranks.toString() + "`\t", true);
             currentPage.addField("Author", names.toString() + "\t", true);
             currentPage.addField("Score", "`" + scores.toString() + "`\t", true);
-            currentPage.addField("Completed", "`" + completed.toString() + "`\t", true);
+            // currentPage.addField("Completed", "`" + completed.toString() + "`\t", true);
             pages.add(currentPage);
         }      
 
