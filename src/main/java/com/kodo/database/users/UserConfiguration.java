@@ -26,8 +26,15 @@ public class UserConfiguration extends Storage{
     }
 
     public void update(){
+
+        //get the users current katas
+        int completed = this.profile.getUser().getCodeChallenges().getTotalCompleted();
         this.profile.update();
-        this.completedKatas.update();
+        int completedAfter = this.profile.getUser().getCodeChallenges().getTotalCompleted();
+
+        if(completed != completedAfter){
+            this.completedKatas.update();
+        }
     }
 
     @Override
