@@ -12,5 +12,6 @@ Sure! Here's the updated README.md file with the feature to-do list:
 ## Feature To-Do List
 - [ ] /tod command, generate a random truth or dare question
 - [ ] bump reminders
+- [ ] /help command which displays information for all commands
 
 Please feel free to add more ideas to this list or suggest improvements to existing features. Let's make this Discord bot amazing together!
