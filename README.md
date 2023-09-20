@@ -1,9 +1,6 @@
 ## Commands
 - /ping, checks the bots latency
-- /register, registers the user to the system
-- /profile, search up a users profile
 - /dev, developer command to test
-- /rkata, display a random kata
 ## Contributing
 Contributions are welcome! If you have any suggestions or improvements, feel free to open an issue or submit a pull request.
 
