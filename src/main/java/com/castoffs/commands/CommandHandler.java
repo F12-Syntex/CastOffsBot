@@ -112,6 +112,21 @@ public class CommandHandler extends Handler{
         return (T) this.commands.stream().filter((i) -> i.getClass().equals(clazz)).findFirst().orElse(null);
     }
     
+    /**
+     * @param name the name of the command to get
+     * @return
+     */
+    public Command getCommand(String name){
+        return this.commands.stream().filter((i) -> i.getMetaInformation().name().equals(name)).findFirst().orElse(null);
+    }
+
+    /**
+     * @return the commands
+     */
+    public Set<Command> getCommands() {
+        return commands;
+    }
+
 }
     
 

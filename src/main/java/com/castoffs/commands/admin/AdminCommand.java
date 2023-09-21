@@ -30,7 +30,7 @@ public abstract class AdminCommand extends Command{
     @Override
     public void handleInteraction(SlashCommandInteractionEvent event) {
 
-        if(!UserUtils.isDeveloper(event.getUser().getId())){
+        if(!UserUtils.isAdmin(event.getGuild(), event.getUser().getId())){
             EmbedBuilder builder = EmbedMaker
                 .ERROR(event.getUser(), "You can't do that.", "You are not a developer, this command is for developers only.")
                 .setColor(Color.cyan);

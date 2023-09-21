@@ -39,6 +39,11 @@ public abstract class Command implements EventListener{
     public abstract void onSlashCommandInteraction(SlashCommandInteractionEvent event);
 
     /**
+     * this method is called after all the commands are registered
+     */
+    public void postCommandRegisteration(){}
+
+    /**
      * This method is called when a button is pressed
      * @param event the event that was fired
      */

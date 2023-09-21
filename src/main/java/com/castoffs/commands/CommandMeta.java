@@ -15,5 +15,6 @@ import org.jetbrains.annotations.NotNull;
 public @interface CommandMeta {
     @NotNull String name();
     @NotNull String description();
+    @NotNull Category category();
     @NotNull long cooldown() default 0L;
 }

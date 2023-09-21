@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 /**
@@ -55,6 +56,7 @@ public final class Castoffs extends ListenerAdapter {
         System.out.println("Token: " + authToken);
 
         this.builder = JDABuilder.createDefault(authToken)
+                .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
                 .setBulkDeleteSplittingEnabled(false)
                 .setActivity(Activity.watching("The cast offs"));
@@ -81,6 +83,9 @@ public final class Castoffs extends ListenerAdapter {
 
             //start challenges when jda is ready
             this.discord.awaitReady();
+
+            this.dependencies.getCommandHandler().getCommands().forEach(o -> o.postCommandRegisteration());
+
 
         } catch (Exception e) {
             e.printStackTrace();

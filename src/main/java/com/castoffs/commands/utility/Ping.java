@@ -3,6 +3,7 @@ package com.castoffs.commands.utility;
 import java.awt.Color;
 import java.time.Instant;
 
+import com.castoffs.commands.Category;
 import com.castoffs.commands.Command;
 import com.castoffs.commands.CommandMeta;
 import com.castoffs.handler.Dependencies;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 /**
  * Ping command, used to check the latency of the bot
  */
-@CommandMeta(name = "ping", description = "Checks the latency of the bot")
+@CommandMeta(name = "ping", description = "Checks the latency of the bot", category = Category.INFO)
 public class Ping extends Command{
 
     public Ping(Dependencies dependencies) {
