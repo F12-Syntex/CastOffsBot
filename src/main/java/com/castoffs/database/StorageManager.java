@@ -15,8 +15,11 @@ public class StorageManager {
 
     private final Dependencies dependencies;
 
+    private InformationStorage informationStorage;
+
     public StorageManager(Dependencies dependencies) {
         this.dependencies = dependencies;
+
     }
 
     /**
@@ -31,6 +34,9 @@ public class StorageManager {
                 System.exit(1);
             }
         }   
+
+        this.informationStorage = new InformationStorage(new File(rootDirectory, "information"), dependencies);
+        this.informationStorage.startup();
     }
 
     /**
@@ -39,5 +45,13 @@ public class StorageManager {
      */
     public Dependencies getDependencies() {
         return dependencies;
+    }
+
+    /**
+     * get the information storage
+     * @return
+     */
+    public InformationStorage getInformationStorage() {
+        return informationStorage;
     }
 }

@@ -27,7 +27,6 @@ public abstract class Storage {
      * create the directory if it doesn't exist, then load the storage
      */
     public void startup(){
-        Logger.getGlobal().info("Loading storage for " + this.getClass().getName());
 
         //create the directory if it doesn't exist
         if(!directory.exists()){

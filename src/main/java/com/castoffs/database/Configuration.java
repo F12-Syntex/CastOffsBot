@@ -26,6 +26,9 @@ public abstract class Configuration {
      * This method is called to load the configuration file
      */
     public void startup(){
+
+        Logger.getGlobal().info("Loading " + this.getClass().getSimpleName() + " from " + this.file.getAbsolutePath());
+
         //create the directory if it doesn't exist
         if(!file.exists()){
             try{
@@ -36,7 +39,6 @@ public abstract class Configuration {
                 failedToLoadFile();
             }
         }
-        
 
         this.load();
     }
@@ -69,5 +71,5 @@ public abstract class Configuration {
     public File getFile() {
         return file;
     }
-
 }
+

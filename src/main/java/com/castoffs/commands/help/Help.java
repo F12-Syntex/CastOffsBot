@@ -1,8 +1,6 @@
 package com.castoffs.commands.help;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.castoffs.commands.Category;
 import com.castoffs.commands.Command;
@@ -14,7 +12,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
 @CommandMeta(name = "help", description = "returns all the commands and their information", category = Category.INFO)
 public class Help extends Command{

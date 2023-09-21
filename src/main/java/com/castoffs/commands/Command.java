@@ -117,7 +117,7 @@ public abstract class Command implements EventListener{
 
         // Check if any of the required values are null
         if (name == null || description == null || permissions == null) {
-            throw new NullPointerException("Command name, description, or permissions is null");
+            throw new IllegalArgumentException("Command name, description, or permissions is null");
         }
 
         return Commands.slash(name, description).setDefaultPermissions(permissions);
