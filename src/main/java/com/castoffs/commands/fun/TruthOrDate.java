@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import com.castoffs.commands.Category;
 import com.castoffs.commands.Command;
+import com.castoffs.commands.CommandButton;
 import com.castoffs.commands.CommandMeta;
 import com.castoffs.database.tod.TruthOrDare;
 import com.castoffs.handler.Dependencies;
@@ -30,7 +31,12 @@ public class TruthOrDate extends Command{
         embed.setColor(Color.orange);
         embed.setTitle(tod.getRandomTruth());
 
-        event.replyEmbeds(embed.build()).queue();
+        CommandButton button = CommandButton.primary("Random", (e) -> {
+            e.replyEmbeds(embed.setTitle(tod.getRandomTruth()).build()).queue();
+            TruthOrDate.this.onSlashCommandInteraction(event);
+        });
+
+        event.replyEmbeds(embed.build()).addActionRow(button).queue();
     }
 
     @Override

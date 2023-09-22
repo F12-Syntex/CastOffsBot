@@ -31,10 +31,9 @@ public final class Castoffs extends ListenerAdapter {
         Castoffs.getInstance().build();
     }
 
-    /**
-     * @return
+    /** 
+     * @return the instance of the bot
      */
-    @Deprecated
     public static Castoffs getInstance() {
         if (Castoffs.instance == null) {
             Castoffs.instance = new Castoffs();
