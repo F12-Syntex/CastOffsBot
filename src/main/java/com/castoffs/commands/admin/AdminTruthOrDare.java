@@ -3,11 +3,13 @@ package com.castoffs.commands.admin;
 import java.util.List;
 
 import com.castoffs.commands.Category;
+import com.castoffs.commands.CommandButton;
 import com.castoffs.commands.CommandMeta;
 import com.castoffs.embeds.EmbedMaker;
 import com.castoffs.handler.Dependencies;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -52,12 +54,17 @@ public class AdminTruthOrDare extends AdminCommand{
             sb.append("dare added: " + dareOption + "\n");
         }
 
-        EmbedBuilder builder = EmbedMaker.INFO(event.getUser(), "Entries updated.");
-        builder.addField("Truths", "`" + this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare().getTruths().size() + "`", false);
-        builder.addField("Dare", "`" + this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare().getDares().size() + "`", false);
-        event.replyEmbeds(builder.build()).queue();
+         event.replyEmbeds(getEmbed().build()).queue();
     }
 
+
+    private EmbedBuilder getEmbed(){
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setTitle("Truth or Dare");
+        builder.addField("Truths", "`" + this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare().getTruths().size() + "`", false);
+        builder.addField("Dare", "`" + this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare().getDares().size() + "`", false);
+        return builder;
+    }
     
 
 
