@@ -14,6 +14,8 @@ Sure! Here's the updated README.md file with the feature to-do list:
 - [ ] bump reminders
 - [ ] /help command which displays information for all commands
 - [ ] /guess command, try and guess the member
-- [ ] /sop command smash or pass 
+- [ ] /sop command smash or pass
+- [ ] ship command
+- [ ] cuss word filter
 
 Please feel free to add more ideas to this list or suggest improvements to existing features. Let's make this Discord bot amazing together!
