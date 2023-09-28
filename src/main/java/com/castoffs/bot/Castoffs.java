@@ -5,6 +5,8 @@ import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.Nonnull;
+
 import com.castoffs.commands.CommandHandler;
 import com.castoffs.database.StorageManager;
 import com.castoffs.handler.Dependencies;
@@ -43,6 +45,7 @@ public final class Castoffs extends ListenerAdapter {
 
     private static Castoffs instance;
 
+    @SuppressWarnings("null")
     private Castoffs() {
         this.configureLogger();
 
@@ -55,10 +58,13 @@ public final class Castoffs extends ListenerAdapter {
         System.out.println("Token: " + authToken);
 
         this.builder = JDABuilder.createDefault(authToken)
-                .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
                 .setBulkDeleteSplittingEnabled(false)
                 .setActivity(Activity.watching("The cast offs"));
+
+        for(@Nonnull GatewayIntent intent : GatewayIntent.values()){
+             this.builder = this.builder.enableIntents(intent);
+        }
 
         dependencies.setBuilder(builder);
     }
@@ -80,10 +86,15 @@ public final class Castoffs extends ListenerAdapter {
             this.discord.addEventListener(this.commandHandler);
             dependencies.setCommandHandler(commandHandler);
 
+            AutoBumpReminder autoBumpReminder = new AutoBumpReminder();
+            this.dependencies.setAutoBumpReminder(autoBumpReminder);
+
             //start challenges when jda is ready
             this.discord.awaitReady();
-
+            
             this.dependencies.getCommandHandler().getCommands().forEach(o -> o.postCommandRegisteration());
+
+            System.out.println(discord.getGatewayIntents().size() + " intents enabled");
 
 
         } catch (Exception e) {

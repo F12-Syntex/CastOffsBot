@@ -10,9 +10,9 @@ This project is licensed under the [MIT License](LICENSE).
 Sure! Here's the updated README.md file with the feature to-do list:
 
 ## Feature To-Do List
-- [ ] /tod command, generate a random truth or dare question
+- [x] /tod command, generate a random truth or dare question
 - [ ] bump reminders
-- [ ] /help command which displays information for all commands
+- [x] /help command which displays information for all commands
 - [ ] /guess command, try and guess the member
 - [ ] /sop command smash or pass
 - [ ] ship command

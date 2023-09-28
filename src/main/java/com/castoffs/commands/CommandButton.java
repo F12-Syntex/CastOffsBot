@@ -33,6 +33,33 @@ public class CommandButton extends ButtonImpl implements EventListener{
       return new CommandButton(uuid.toString(), label, ButtonStyle.PRIMARY, false, (Emoji)null, interaction);
     }
 
+    @Nonnull
+    public static CommandButton secondary(@Nonnull String label, @Nonnull ButtonInteractable interaction) {
+      UUID uuid = UUID.randomUUID();
+      Checks.notEmpty(label, "Label");
+      Checks.notLonger(uuid.toString(), 100, "Id");
+      Checks.notLonger(label, 80, "Label");
+      return new CommandButton(uuid.toString(), label, ButtonStyle.SECONDARY, false, (Emoji)null, interaction);
+    }
+
+    @Nonnull
+    public static CommandButton success(@Nonnull String label, @Nonnull ButtonInteractable interaction) {
+      UUID uuid = UUID.randomUUID();
+      Checks.notEmpty(label, "Label");
+      Checks.notLonger(uuid.toString(), 100, "Id");
+      Checks.notLonger(label, 80, "Label");
+      return new CommandButton(uuid.toString(), label, ButtonStyle.SUCCESS, false, (Emoji)null, interaction);
+    }
+
+    @Nonnull
+    public static CommandButton danger(@Nonnull String label, @Nonnull ButtonInteractable interaction) {
+      UUID uuid = UUID.randomUUID();
+      Checks.notEmpty(label, "Label");
+      Checks.notLonger(uuid.toString(), 100, "Id");
+      Checks.notLonger(label, 80, "Label");
+      return new CommandButton(uuid.toString(), label, ButtonStyle.DANGER, false, (Emoji)null, interaction);
+    }
+
     public void disable(){
         Castoffs.getInstance().getDiscord().removeEventListener(this);
     }
