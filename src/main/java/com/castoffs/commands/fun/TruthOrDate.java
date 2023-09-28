@@ -1,9 +1,11 @@
 package com.castoffs.commands.fun;
 
 import java.awt.Color;
-import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.castoffs.commands.Category;
 import com.castoffs.commands.Command;
@@ -29,11 +31,11 @@ public class TruthOrDate extends Command{
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        this.replyToMessageWithTodToCommand(event);
+        this.reply(event);
     }
 
     @SuppressWarnings("null")
-    public void replyToMessageWithTodToCommand(SlashCommandInteractionEvent event){
+    public void reply(Object messageInteraction){
         TruthOrDare tod = this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare();
 
         EmbedBuilder embed = new EmbedBuilder();
@@ -42,39 +44,45 @@ public class TruthOrDate extends Command{
 
         CommandButton button = CommandButton.primary("Random", (e) -> {
             Message msg = e.getMessage();
-            this.replyToMessageWithTodToMessage(msg);
+            this.reply(msg);
             e.deferEdit().queue();
         });
 
-        //disable the button after 10 seconds
-        Timer timer = new Timer();
-        timer.schedule(new java.util.TimerTask() {
-            @Override
-            public void run() {
-                button.disable();
-                //remove the button from the message
-                Button button = Button.primary(UUID.randomUUID().toString(), "Random").asDisabled();
-                event.getHook().editOriginalEmbeds(embed.build()).setActionRow(button).queue();
-            }
-        }, 10000);
+        List<Button> buttons = new ArrayList<>();
+        buttons.add(button);
 
-        event.replyEmbeds(embed.build()).addActionRow(button).queue();
-    }
+        if(messageInteraction instanceof SlashCommandInteractionEvent){
+            SlashCommandInteractionEvent event = (SlashCommandInteractionEvent) messageInteraction;
+            event.replyEmbeds(embed.build()).addActionRow(button).queue((msg) -> {
+                //disable the button after 10 seconds
+                Timer timer = new Timer();
+                timer.schedule(new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        button.disable();
+                        //remove the button from the message
+                        List<Button> disabledButtons = buttons.stream().map(o -> o.asDisabled()).collect(Collectors.toList());
+                        event.getHook().editOriginalEmbeds(embed.build()).setActionRow(disabledButtons).queue();
+                    }
+                }, 10000);
+            }, (fail -> {}));
+        }else{
+            Message message = (Message) messageInteraction;
+            message.replyEmbeds(embed.build()).addActionRow(button).queue((msg) -> {
+                //disable the button after 10 seconds
+                Timer timer = new Timer();
+                timer.schedule(new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        button.disable();
+                        //remove the button from the message
+                        List<Button> disabledButtons = buttons.stream().map(o -> o.asDisabled()).collect(Collectors.toList());
+                        msg.editMessageEmbeds(embed.build()).setActionRow(disabledButtons).queue();
+                    }
+                }, 10000);
+            }, (fail -> {}));
+        }
 
-    public void replyToMessageWithTodToMessage(Message message){
-        TruthOrDare tod = this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare();
-
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.orange);
-        embed.setTitle(tod.getRandomTruth());
-
-        CommandButton button = CommandButton.primary("Random", (e) -> {
-            Message msg = e.getMessage();
-            this.replyToMessageWithTodToMessage(msg);
-            e.deferEdit().queue();
-        });
-
-        message.replyEmbeds(embed.build()).addActionRow(button).queue();
     }
 
     @Override
