@@ -98,6 +98,7 @@ public final class Castoffs extends ListenerAdapter {
 
             System.out.println(discord.getGatewayIntents().size() + " intents enabled");
 
+            //self roles
             this.discord.getGuilds().forEach(guild -> {
                 //look at all roles that have a bot in them
                 guild.getRoles().forEach(role -> {
