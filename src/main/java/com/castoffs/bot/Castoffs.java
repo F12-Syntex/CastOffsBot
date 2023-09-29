@@ -80,6 +80,9 @@ public final class Castoffs extends ListenerAdapter {
             this.discord.addEventListener(this);
             dependencies.setDiscord(discord);
 
+            //start challenges when jda is ready
+            this.discord.awaitReady();
+
             this.commandHandler = new CommandHandler(this.dependencies); 
             this.commandHandler.loadCommands();
             this.commandHandler.registerCommands();
@@ -88,14 +91,23 @@ public final class Castoffs extends ListenerAdapter {
 
             AutoBumpReminder autoBumpReminder = new AutoBumpReminder();
             this.dependencies.setAutoBumpReminder(autoBumpReminder);
-
-            //start challenges when jda is ready
-            this.discord.awaitReady();
             
             this.dependencies.getCommandHandler().getCommands().forEach(o -> o.postCommandRegisteration());
 
             System.out.println(discord.getGatewayIntents().size() + " intents enabled");
 
+            this.discord.getGuilds().forEach(guild -> {
+                //look at all roles that have a bot in them
+                guild.getRoles().forEach(role -> {
+                    if(role.getId().equals("648505665836417045")){
+                        //check if the bot has the role, if not, add it
+                        if(!guild.getSelfMember().getRoles().contains(role)){
+                            // guild.addRoleToMember(guild.getSelfMember(), role).queue();
+                            // System.out.println("Added role to bot in " + guild.getName() + " role: " + role.getName());
+                        }
+                    }
+                });
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
