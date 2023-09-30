@@ -58,6 +58,8 @@ public class AutoBumpReminder {
 
         long twoHours = 1000*60*60*2;
 
+        System.out.println("Last message was " + TimeUtils.formatDuration(difference) + " ago");
+
         if(difference > twoHours){
 
             if(!reminded){

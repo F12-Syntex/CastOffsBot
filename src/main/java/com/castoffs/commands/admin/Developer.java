@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 /**
  * developer command used for testing purposes
  */
+@SuppressWarnings("null")
 @CommandMeta(description = "Returns the developer command", name = "dev", category = Category.ADMIN)
 public class Developer extends AdminCommand{
 
@@ -36,9 +37,13 @@ public class Developer extends AdminCommand{
 
         Guild castoffs = guild.get();
 
-        //print the bots perms for this server
-        castoffs.getSelfMember().getPermissions().forEach(perm -> {
-            System.out.println(perm.getName());
+        //upsert commands to the guild
+        this.dependencies.getCommandHandler().getCommands().forEach(cmd -> {
+            castoffs.upsertCommand(cmd.getSlashCommandData()).queue(a -> {
+                System.out.println("Command " + cmd.getSlashCommandData().getName() + " added to guild " + castoffs.getName());
+            }, a -> {
+                System.out.println("Command " + cmd.getSlashCommandData().getName() + " failed to add to guild " + castoffs.getName());
+            });
         });
     
     }
