@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class AutoBumpReminder {
@@ -58,7 +57,7 @@ public class AutoBumpReminder {
 
         long twoHours = 1000*60*60*2;
 
-        System.out.println("Last message was " + TimeUtils.formatDuration(difference) + " ago");
+        System.out.println("Last message was " + TimeUtils.formatDuration((twoHours - difference)/1000) + " ago");
 
         if(difference > twoHours){
 
@@ -78,6 +77,7 @@ public class AutoBumpReminder {
                 members.forEach(o -> {
                     o.getUser().openPrivateChannel().queue((c) -> {
                         c.sendMessageEmbeds(embedBuilder.build()).queue();
+                        System.out.println("Sent bump reminder to " + o.getUser().getName());
                     });
                 });
 
