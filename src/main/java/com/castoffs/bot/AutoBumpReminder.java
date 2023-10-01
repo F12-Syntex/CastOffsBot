@@ -4,9 +4,8 @@ import java.awt.Color;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
 
 import com.castoffs.utils.TimeUtils;
 
@@ -15,26 +14,39 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.channel.GenericChannelEvent;
+import net.dv8tion.jda.api.events.channel.forum.GenericForumTagEvent;
+import net.dv8tion.jda.api.events.channel.update.GenericChannelUpdateEvent;
+import net.dv8tion.jda.api.events.emoji.GenericEmojiEvent;
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
+import net.dv8tion.jda.api.events.guild.invite.GenericGuildInviteEvent;
+import net.dv8tion.jda.api.events.guild.member.GenericGuildMemberEvent;
+import net.dv8tion.jda.api.events.guild.override.GenericPermissionOverrideEvent;
+import net.dv8tion.jda.api.events.guild.voice.GenericGuildVoiceEvent;
+import net.dv8tion.jda.api.events.interaction.GenericAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.GenericContextInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.GenericComponentInteractionCreateEvent;
+import net.dv8tion.jda.api.events.message.GenericMessageEvent;
+import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
+import net.dv8tion.jda.api.events.role.GenericRoleEvent;
+import net.dv8tion.jda.api.events.session.GenericSessionEvent;
+import net.dv8tion.jda.api.events.stage.GenericStageInstanceEvent;
+import net.dv8tion.jda.api.events.sticker.GenericGuildStickerEvent;
+import net.dv8tion.jda.api.events.thread.GenericThreadEvent;
+import net.dv8tion.jda.api.events.thread.member.GenericThreadMemberEvent;
+import net.dv8tion.jda.api.events.user.GenericUserEvent;
+import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class AutoBumpReminder {
+public class AutoBumpReminder extends ListenerAdapter{
 
     private boolean reminded = false;
 
     public AutoBumpReminder(){
-        
-        //create a scheduled task in a new thread and check every minute if the bump reminder should be sent
-        // Create a single-threaded executor service
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
-        // Define the task to be executed
-        Runnable task = () -> {
-            this.check();
-        };
-
-        // Schedule the task to run after a delay of 1 second and then repeat every 5 seconds
-        executor.scheduleAtFixedRate(task, 0L, 1, TimeUnit.SECONDS);
+        Castoffs.getInstance().getDiscord().addEventListener(this);
     }
-
 
     public void check(){
         Optional<Guild> guild = Castoffs.getInstance().getDiscord().getGuilds()
@@ -88,4 +100,30 @@ public class AutoBumpReminder {
             reminded = false;
         }
     }
+
+    public void onGenericSessionEvent(@Nonnull GenericSessionEvent event) {this.check();}
+    public void onGenericInteractionCreate(@Nonnull GenericInteractionCreateEvent event) {this.check();}
+    public void onGenericAutoCompleteInteraction(@Nonnull GenericAutoCompleteInteractionEvent event) {this.check();}
+    public void onGenericComponentInteractionCreate(@Nonnull GenericComponentInteractionCreateEvent event) {this.check();}
+    public void onGenericCommandInteraction(@Nonnull GenericCommandInteractionEvent event) {this.check();}
+    public void onGenericContextInteraction(@Nonnull GenericContextInteractionEvent<?> event) {this.check();}
+    public void onGenericMessage(@Nonnull GenericMessageEvent event) {this.check();}
+    public void onGenericMessageReaction(@Nonnull GenericMessageReactionEvent event) {this.check();}
+    public void onGenericUser(@Nonnull GenericUserEvent event) {this.check();}
+    public void onGenericUserPresence(@Nonnull GenericUserPresenceEvent event) {this.check();}
+    public void onGenericStageInstance(@Nonnull GenericStageInstanceEvent event) {this.check();}
+    public void onGenericChannel(@Nonnull GenericChannelEvent event) {this.check();}
+    public void onGenericChannelUpdate(@Nonnull GenericChannelUpdateEvent<?> event) {this.check();}
+    public void onGenericThread(@Nonnull GenericThreadEvent event) {this.check();}
+    public void onGenericThreadMember(@Nonnull GenericThreadMemberEvent event) {this.check();}
+    public void onGenericGuild(@Nonnull GenericGuildEvent event) {this.check();}
+    public void onGenericGuildInvite(@Nonnull GenericGuildInviteEvent event) {this.check();}
+    public void onGenericGuildMember(@Nonnull GenericGuildMemberEvent event) {this.check();}
+    public void onGenericGuildVoice(@Nonnull GenericGuildVoiceEvent event) {this.check();}
+    public void onGenericRole(@Nonnull GenericRoleEvent event) {this.check();}
+    public void onGenericEmoji(@Nonnull GenericEmojiEvent event) {this.check();}
+    public void onGenericGuildSticker(@Nonnull GenericGuildStickerEvent event) {this.check();}
+    public void onGenericPermissionOverride(@Nonnull GenericPermissionOverrideEvent event) {this.check();}
+    public void onGenericForumTag(@Nonnull GenericForumTagEvent event) {this.check();}
+
 }
