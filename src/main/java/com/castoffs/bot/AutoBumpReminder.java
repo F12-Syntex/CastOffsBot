@@ -131,26 +131,6 @@ public class AutoBumpReminder extends ListenerAdapter{
         this.check();
         this.log(event);
     }
-    public void onGenericInteractionCreate(@Nonnull GenericInteractionCreateEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericAutoCompleteInteraction(@Nonnull GenericAutoCompleteInteractionEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericComponentInteractionCreate(@Nonnull GenericComponentInteractionCreateEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericCommandInteraction(@Nonnull GenericCommandInteractionEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericContextInteraction(@Nonnull GenericContextInteractionEvent<?> event) {
-        this.check();
-        this.log(event);
-    }
     public void onGenericMessage(@Nonnull GenericMessageEvent event) {
         this.check();
         this.log(event);
@@ -163,65 +143,5 @@ public class AutoBumpReminder extends ListenerAdapter{
         this.check();
         this.log(event);
     }
-    public void onGenericUserPresence(@Nonnull GenericUserPresenceEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericStageInstance(@Nonnull GenericStageInstanceEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericChannel(@Nonnull GenericChannelEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericChannelUpdate(@Nonnull GenericChannelUpdateEvent<?> event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericThread(@Nonnull GenericThreadEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericThreadMember(@Nonnull GenericThreadMemberEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericGuild(@Nonnull GenericGuildEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericGuildInvite(@Nonnull GenericGuildInviteEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericGuildMember(@Nonnull GenericGuildMemberEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericGuildVoice(@Nonnull GenericGuildVoiceEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericRole(@Nonnull GenericRoleEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericEmoji(@Nonnull GenericEmojiEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericGuildSticker(@Nonnull GenericGuildStickerEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericPermissionOverride(@Nonnull GenericPermissionOverrideEvent event) {
-        this.check();
-        this.log(event);
-    }
-    public void onGenericForumTag(@Nonnull GenericForumTagEvent event) {
-        this.check();
-        this.log(event);
-    }
-
+    
 }
