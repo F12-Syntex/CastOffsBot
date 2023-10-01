@@ -40,6 +40,9 @@ import net.dv8tion.jda.api.events.user.GenericUserEvent;
 import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+/**
+ * all bump reminders are handled here
+ */
 public class AutoBumpReminder extends ListenerAdapter{
 
     private boolean reminded = false;
