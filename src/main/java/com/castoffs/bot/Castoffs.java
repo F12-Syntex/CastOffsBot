@@ -13,9 +13,7 @@ import com.castoffs.handler.Dependencies;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -85,6 +83,9 @@ public final class Castoffs extends ListenerAdapter {
             //start challenges when jda is ready
             this.discord.awaitReady();
 
+            AutoBumpReminder autoBumpReminder = new AutoBumpReminder();
+            this.dependencies.setAutoBumpReminder(autoBumpReminder);
+
             this.commandHandler = new CommandHandler(this.dependencies); 
             this.commandHandler.loadCommands();
             this.discord.addEventListener(this.commandHandler);
@@ -108,10 +109,6 @@ public final class Castoffs extends ListenerAdapter {
                 });
 
             });
-
-            AutoBumpReminder autoBumpReminder = new AutoBumpReminder();
-            this.dependencies.setAutoBumpReminder(autoBumpReminder);
-            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,6 +165,10 @@ public final class Castoffs extends ListenerAdapter {
      */
     public Dependencies getDependencies() {
         return dependencies;
+    }
+
+    public void tick(){
+        this.dependencies.getAutoBumpReminder().tick();
     }
 
 }

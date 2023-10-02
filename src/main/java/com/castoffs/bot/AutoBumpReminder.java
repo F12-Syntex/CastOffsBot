@@ -10,24 +10,15 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.message.GenericMessageEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 /**
  * all bump reminders are handled here
  */
-public class AutoBumpReminder extends ListenerAdapter{
+public class AutoBumpReminder {
 
     private boolean reminded = false;
 
-    public AutoBumpReminder(){
-        Castoffs.getInstance().getDiscord().addEventListener(this);
-    }
-
-    public void check(){
+    public void tick(){
         Optional<Guild> guild = Castoffs.getInstance().getDiscord().getGuilds()
                 .stream()
                 .filter(o -> o.getId().equals("339615489246494722")).findFirst();
@@ -48,7 +39,7 @@ public class AutoBumpReminder extends ListenerAdapter{
 
         long twoHours = 1000*60*60*2;
 
-        System.out.println("Last message was " + TimeUtils.formatDuration((twoHours - difference)/1000) + " ago");
+        // System.out.println("Last message was " + TimeUtils.formatDuration((twoHours - difference)/1000) + " ago");
 
         if(difference > twoHours){
 
@@ -78,31 +69,6 @@ public class AutoBumpReminder extends ListenerAdapter{
         }else{
             reminded = false;
         }
-    }
-
-    @SuppressWarnings("null")
-    public void log(GenericEvent event){
-
-        if(event instanceof GenericMessageEvent){
-            GenericMessageEvent messageEvent = (GenericMessageEvent) event;
-            System.out.println("Channel: " + messageEvent.getChannel().getName());
-            if(event instanceof GenericMessageReactionEvent){
-                GenericMessageReactionEvent reactionEvent = (GenericMessageReactionEvent) event;
-                System.out.println("\t" +  "Reaction: " + reactionEvent.getReaction().getEmoji().getFormatted());
-            }
-            if(event instanceof MessageReceivedEvent){
-                MessageReceivedEvent messageReceivedEvent = (MessageReceivedEvent) event;
-                if(messageReceivedEvent.getMember() == null){
-                    return;
-                }
-                System.out.println("\t" + messageReceivedEvent.getMember().getEffectiveName() + ": " + messageReceivedEvent.getMessage().getContentRaw());
-            }
-        }
-    }
-
-    public void MessageReceivedEvent(MessageReceivedEvent event) {
-        this.check();
-        this.log(event);
     }
 
 }

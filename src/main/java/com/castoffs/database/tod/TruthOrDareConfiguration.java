@@ -1,7 +1,6 @@
 package com.castoffs.database.tod;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import com.castoffs.database.Configuration;
 import com.castoffs.handler.Dependencies;

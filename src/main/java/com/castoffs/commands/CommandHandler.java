@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 
 import org.reflections.Reflections;
 
+import com.castoffs.bot.Castoffs;
 import com.castoffs.bot.Settings;
 import com.castoffs.embeds.EmbedMaker;
 import com.castoffs.handler.Dependencies;
@@ -130,6 +131,9 @@ public class CommandHandler extends Handler{
      */
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+
+        Castoffs.getInstance().tick();
+
         try{
             net.dv8tion.jda.api.entities.Member member = event.getMember();
 
@@ -150,8 +154,8 @@ public class CommandHandler extends Handler{
             Optional<Command> commandOptional = this.getCommand(commandName);
 
             if(commandOptional.isEmpty()){
-                EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Command not found", "The command `" + commandName + "` was not found.");
-                event.getMessage().replyEmbeds(error.build()).queue();
+                // EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Command not found", "The command `" + commandName + "` was not found.");
+                // event.getMessage().replyEmbeds(error.build()).queue();
                 return;
             }
 
