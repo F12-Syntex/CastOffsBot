@@ -87,13 +87,9 @@ public final class Castoffs extends ListenerAdapter {
 
             this.commandHandler = new CommandHandler(this.dependencies); 
             this.commandHandler.loadCommands();
-            this.commandHandler.registerCommands();
             this.discord.addEventListener(this.commandHandler);
             dependencies.setCommandHandler(commandHandler);
 
-            AutoBumpReminder autoBumpReminder = new AutoBumpReminder();
-            this.dependencies.setAutoBumpReminder(autoBumpReminder);
-            
             this.dependencies.getCommandHandler().getCommands().forEach(o -> o.postCommandRegisteration());
 
             System.out.println(discord.getGatewayIntents().size() + " intents enabled");
@@ -112,6 +108,10 @@ public final class Castoffs extends ListenerAdapter {
                 });
 
             });
+
+            AutoBumpReminder autoBumpReminder = new AutoBumpReminder();
+            this.dependencies.setAutoBumpReminder(autoBumpReminder);
+            
 
         } catch (Exception e) {
             e.printStackTrace();

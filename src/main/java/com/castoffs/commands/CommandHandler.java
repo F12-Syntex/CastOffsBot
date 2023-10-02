@@ -1,28 +1,30 @@
 package com.castoffs.commands;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import org.reflections.Reflections;
 
+import com.castoffs.bot.Settings;
+import com.castoffs.embeds.EmbedMaker;
 import com.castoffs.handler.Dependencies;
 import com.castoffs.handler.Handler;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandHandler extends Handler{
     
     private final Set<Command> commands;
     private final Logger logger = Logger.getGlobal();
     private final Dependencies dependencies;
-
 
     /**
      * @param dependencies
@@ -57,7 +59,7 @@ public class CommandHandler extends Handler{
                 Command command = commandClazz.getConstructor(Dependencies.class).newInstance(this.dependencies);
 
                 CommandMeta meta = command.getMetaInformation();
-                logger.info("Command loaded: " + meta.name());
+                logger.info("Command loaded: " + meta.alias()[0]);
                 
                 this.commands.add(command);
             } catch (Exception e) {
@@ -66,42 +68,22 @@ public class CommandHandler extends Handler{
         });
 
         logger.info("Loaded " + this.commands.size() + " command(s)");
-    }
 
-    /**
-     * register all the commands with discord
-     */
-    public void registerCommands() {
-        JDA jda = this.dependencies.getDiscord();
-
-        List<SlashCommandData> slashCommands = new ArrayList<>();
-
+        logger.info("checking for duplicates");
+        Set<String> aliases = new HashSet<>();
         this.commands.forEach(command -> {
-            logger.info("Registering command: " + command.getMetaInformation().name());
-            SlashCommandData data = command.getSlashCommandData();
-            if (data != null) {
-                slashCommands.add(data);
-            } else {
-                logger.warning("Command " + command.getMetaInformation().name() + " has no slash command data");
+            CommandMeta meta = command.getMetaInformation();
+            for(String alias : meta.alias()){
+                if(aliases.contains(alias)){
+                    logger.warning("Duplicate command alias found: " + alias);
+                    System.exit(0);
+                }else{
+                    aliases.add(alias);
+                }
             }
         });
-
-        jda.updateCommands().addCommands(slashCommands).queue();
     }
-
-
-    /**
-     * This method is called when a slash command is used
-     * @param event the slash command event
-     */
-    @Override
-    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        String name = event.getName();
-
-        //for every command, check if the name matches the name of the command, if so, run the command
-        this.commands.stream().filter((i) -> i.getMetaInformation().name().equals(name)).forEach((i) -> i.handleInteraction(event));
-    }
-
+    
     /**
      * @param <T> Instance of command
      * @param clazz the class of the command to get
@@ -114,10 +96,17 @@ public class CommandHandler extends Handler{
     
     /**
      * @param name the name of the command to get
-     * @return
+     * @return the command, or null if not found
      */
-    public Command getCommand(String name){
-        return this.commands.stream().filter((i) -> i.getMetaInformation().name().equals(name)).findFirst().orElse(null);
+    public Optional<Command> getCommand(String name){
+        for(Command command : this.getCommands()){
+            for(String alias : command.getMetaInformation().alias()){
+                if(alias.equalsIgnoreCase(name)){
+                    return Optional.of(command);
+                }
+            }
+        }
+        return Optional.empty();
     }
 
     /**
@@ -127,6 +116,90 @@ public class CommandHandler extends Handler{
         return commands;
     }
 
+    /**
+     * @param category the category to get commands from
+     * @return the commands in the category
+     */
+    public List<Command> getCommands(Category category){
+        return this.commands.stream().filter(o -> o.getMetaInformation().category().equals(category)).collect(Collectors.toList());
+    }
+
+    /**
+     * This method is called when a slash command is used
+     * @param event the slash command event
+     */
+    @Override
+    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        try{
+            net.dv8tion.jda.api.entities.Member member = event.getMember();
+
+            //ensure the user is a valid human
+            if(member == null) return;
+            if(member.getUser().isBot()) return;
+            if(member.getUser().isSystem()) return;
+
+            String message = event.getMessage().getContentRaw();
+
+            //check if the message is a command
+            if(!message.startsWith(Settings.PREFIX)) return;
+
+            //get the command name
+            String commandName = message.split(" ")[0].replace(Settings.PREFIX, "");
+
+            //check if command exists
+            Optional<Command> commandOptional = this.getCommand(commandName);
+
+            if(commandOptional.isEmpty()){
+                EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Command not found", "The command `" + commandName + "` was not found.");
+                event.getMessage().replyEmbeds(error.build()).queue();
+                return;
+            }
+
+            //get the command in question
+            Command command = commandOptional.get();
+
+            //check if the user has permissions to run the command
+            List<Permission> permission = command.getDefaultMemberPermissions();
+
+            if(!member.hasPermission(permission)){
+                EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Invalid permissions", "You are missing one or more of the following permissions: " + permission.toString());
+                event.getMessage().replyEmbeds(error.build()).queue();
+                return;
+            }
+
+            //check if the command is on cooldown
+            CommandCooldown cooldown = command.getCooldown();
+            String uuid = event.getAuthor().getId();
+
+            //check if the user is on cooldown, if not, run the command
+            if(!cooldown.isOnCooldown(uuid, event.getGuild())){
+
+                CommandRecivedEvent commandRecivedEvent = new CommandRecivedEvent(
+                                                                command,
+                                                                event.getJDA(), 
+                                                                event.getResponseNumber(),
+                                                                event.getMessage());
+
+                command.onCommandRecieved(commandRecivedEvent);
+                cooldown.applyCooldown(uuid);
+            }else{
+                EmbedBuilder builder = EmbedMaker.ERROR_BASIC(event.getAuthor());
+                builder.setTitle("You're on cooldown!");
+                builder.appendDescription("You can't do that command yet, please wait.");
+                builder.addField("Time remaining", "```" + cooldown.getRemainingCooldownFormatted(uuid) + "```", true);
+                event.getMessage().replyEmbeds(builder.build()).queue();
+            }
+
+        }catch(Exception e){
+
+            EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Falure in " + this.getClass().getSimpleName(), e.getLocalizedMessage());
+            event.getMessage().replyEmbeds(error.build()).queue();
+
+            if(e instanceof IllegalArgumentException) return;
+
+            e.printStackTrace();
+        }
+    }
 }
     
 

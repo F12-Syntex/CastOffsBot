@@ -1,17 +1,19 @@
 package com.castoffs.commands;
 
+import javax.annotation.Nonnull;
+
 public enum Category {
     ADMIN("🔒"),
     FUN("🎉"),
-    INFO("ℹ️");
+    INFO(":pencil:");
 
-    private String emoji;
+    private @Nonnull String emoji;
 
-    Category(String emoji) {
+    Category(@Nonnull String emoji) {
         this.emoji = emoji;
     }
 
-    public String getEmoji() {
+    public @Nonnull String getEmoji() {
         return emoji;
     }
 }

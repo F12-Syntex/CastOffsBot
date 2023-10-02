@@ -6,4 +6,5 @@ package com.castoffs.bot;
 public class Settings {
     public static final String NAME = "Castoffs";
     public static final String VERSION = "v1.0.1";
+    public static final String PREFIX = ";";
 }

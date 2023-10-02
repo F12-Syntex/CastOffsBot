@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.annotation.Nonnull;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,8 +15,10 @@ import org.jetbrains.annotations.NotNull;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CommandMeta {
-    @NotNull String name();
-    @NotNull String description();
-    @NotNull Category category();
+    @NotNull @Nonnull String[] alias();
+    @NotNull @Nonnull String description();
+    @NotNull @Nonnull Category category();
+    @NotNull @Nonnull String[] usage();
+    @NotNull @Nonnull String[] examples();
     @NotNull long cooldown() default 0L;
 }
