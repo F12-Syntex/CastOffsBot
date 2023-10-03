@@ -11,11 +11,13 @@ import javax.annotation.Nonnull;
 import com.castoffs.utils.QuoteUtils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 
 /**
  * utility class used to create embeds
@@ -90,7 +92,7 @@ public class EmbedMaker {
      * @param future the future task
      * @return the loading embed
      */
-    public static void runAsyncTask(SlashCommandInteractionEvent event, Runnable runnable) {
+    public static void runAsyncTask(Message origin, User user, MessageSupplier runnable) {
         EmbedBuilder loadingEmbedBuilder = new EmbedBuilder();
         loadingEmbedBuilder.setTitle("Loading task...");
         loadingEmbedBuilder.setDescription("Hang tight while this task, this may take some time depending on the request. In the meantime, here are some quotes to keep you entertained.");
@@ -99,61 +101,22 @@ public class EmbedMaker {
 
         loadingEmbedBuilder.setImage("https://media.tenor.com/RVvnVPK-6dcAAAAC/reload-cat.gif");
 
-        loadingEmbedBuilder.setFooter("User: " + event.getUser().getName() + " | ID: " + event.getUser().getId(), event.getUser().getAvatarUrl());
+        loadingEmbedBuilder.setFooter("User: " + user.getName() + " | ID: " + user.getId(), user.getAvatarUrl());
         loadingEmbedBuilder.setTimestamp(Instant.now());
         loadingEmbedBuilder.addField("Quote", "```" + QuoteUtils.getRandomQuote() + "```", true);
 
         MessageEmbed loadedEmbed = loadingEmbedBuilder.build();
 
         //Send the loading embed
-        event.replyEmbeds(loadedEmbed).queue();
+        MessageCreateAction action = origin.replyEmbeds(loadedEmbed);
         
         executorService.submit(() -> {
             try {
-                runnable.run();
+                runnable.call(action.complete());
             } catch (Exception e) {
-                EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
-                event.getHook().editOriginalEmbeds(builder.build()).queue();
+                EmbedBuilder builder = EmbedMaker.ERROR(user, "Whoops, an error has occured.", e.getLocalizedMessage());
+                origin.editMessageEmbeds(builder.build()).queue();
                 e.printStackTrace();
-                e.printStackTrace();
-            }
-        });
-    }
-
-    /**
-     * This method returns a loading embed, meanwhile running the future task, be sure to edit the original message with the result
-     * @param event the event
-     * @param future the future task
-     * @return the loading embed
-     */
-    public static void sendAsyncMessage(SlashCommandInteractionEvent event, EmbedBuilderSupplier<EmbedBuilder> task) {
-        EmbedMaker.runAsyncTask(event, () -> {
-            try{
-                EmbedBuilder embed = task.call(event.getHook());
-                event.getHook().editOriginalEmbeds(embed.build()).queue();
-            }catch(Exception e){
-                EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
-                event.getHook().editOriginalEmbeds(builder.build()).queue();
-                e.printStackTrace();
-            }
-        });
-    }
-
-    /**
-     * This method returns a loading embed, meanwhile running the future task, be sure to edit the original message with the result
-     * @param event the event
-     * @param future the future task
-     * @return the loading embed
-     */
-    @SuppressWarnings("null")
-    public static void sendAsyncMessageWithActionItems(SlashCommandInteractionEvent event, EmbedBuilderSupplier<EmbedBuilder> task, ItemComponent... items) {
-        EmbedMaker.runAsyncTask(event, () -> {
-            try{
-                EmbedBuilder embed = task.call(event.getHook());
-                event.getHook().editOriginalEmbeds(embed.build()).setActionRow(items).queue();
-            }catch(Exception e){
-                EmbedBuilder builder = EmbedMaker.ERROR(event.getUser(), "Whoops, an error has occured.", e.getLocalizedMessage());
-                event.getHook().editOriginalEmbeds(builder.build()).queue();
                 e.printStackTrace();
             }
         });
@@ -167,4 +130,13 @@ public class EmbedMaker {
     public interface EmbedBuilderSupplier <T> {
         T call(InteractionHook hook);
     }    
+
+    /**
+     * This interface is used to pass the hook to the future
+     * @param <T>
+     */
+    @FunctionalInterface
+    public interface MessageSupplier {
+        void call(Message hook);
+    } 
 }

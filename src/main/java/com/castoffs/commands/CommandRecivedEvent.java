@@ -118,6 +118,15 @@ public class CommandRecivedEvent extends GenericMessageEvent
     public String[] getArgs() {
         return message.getContentRaw().trim().split("\\s+");
     }
+
+    /**
+     * gets the argument at the specified index
+     * @param index
+     * @return
+     */
+    public String getArgumentAtIndexAsString(int index){
+        return this.getArgs()[index];
+    }
     
     /**
      * checks if the argument at the index is valid
@@ -129,53 +138,53 @@ public class CommandRecivedEvent extends GenericMessageEvent
         return index >= 0 && index < length;
     }
 
-/**
- * Checks if the argument at the specified index is valid and of the specified type.
- * Only primitive wrapper classes are supported.
- *
- * @param index the index of the argument to check
- * @param type  the expected type of the argument
- * @return true if the argument is valid and of the specified type, false otherwise
- */
-public boolean confirmArgumentType(int index, Object type) {
-    if (!isArgumentValidAtIndex(index)) {
-        return false;
-    }
-
-    String argument = getArgs()[index];
-    Class<?> expectedType = (Class<?>) type;
-
-    try {
-        // Use the parse*() methods of the wrapper classes to validate the argument type
-        if (expectedType == Integer.class) {
-            Integer.parseInt(argument);
-        } else if (expectedType == Double.class) {
-            Double.parseDouble(argument);
-        } else if (expectedType == Boolean.class) {
-            Boolean.parseBoolean(argument);
-        } else if (expectedType == Float.class) {
-            Float.parseFloat(argument);
-        } else if (expectedType == Long.class) {
-            Long.parseLong(argument);
-        } else if (expectedType == Short.class) {
-            Short.parseShort(argument);
-        } else if (expectedType == Byte.class) {
-            Byte.parseByte(argument);
-        } else if (expectedType == Character.class) {
-            if (argument.length() != 1) {
-                return false;
-            }
-            Character.valueOf(argument.charAt(0));
-        } else {
-            // Unsupported type
+    /**
+     * Checks if the argument at the specified index is valid and of the specified type.
+     * Only primitive wrapper classes are supported.
+     *
+     * @param index the index of the argument to check
+     * @param type  the expected type of the argument
+     * @return true if the argument is valid and of the specified type, false otherwise
+     */
+    public boolean confirmArgumentType(int index, Object type) {
+        if (!isArgumentValidAtIndex(index)) {
             return false;
         }
-    } catch (NumberFormatException | NullPointerException | IndexOutOfBoundsException e) {
-        // Invalid argument or conversion error
-        return false;
+
+        String argument = getArgs()[index];
+        Class<?> expectedType = (Class<?>) type;
+
+        try {
+            // Use the parse*() methods of the wrapper classes to validate the argument type
+            if (expectedType == Integer.class) {
+                Integer.parseInt(argument);
+            } else if (expectedType == Double.class) {
+                Double.parseDouble(argument);
+            } else if (expectedType == Boolean.class) {
+                Boolean.parseBoolean(argument);
+            } else if (expectedType == Float.class) {
+                Float.parseFloat(argument);
+            } else if (expectedType == Long.class) {
+                Long.parseLong(argument);
+            } else if (expectedType == Short.class) {
+                Short.parseShort(argument);
+            } else if (expectedType == Byte.class) {
+                Byte.parseByte(argument);
+            } else if (expectedType == Character.class) {
+                if (argument.length() != 1) {
+                    return false;
+                }
+                Character.valueOf(argument.charAt(0));
+            } else {
+                // Unsupported type
+                return false;
+            }
+        } catch (NumberFormatException | NullPointerException | IndexOutOfBoundsException e) {
+            // Invalid argument or conversion error
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
 
 }

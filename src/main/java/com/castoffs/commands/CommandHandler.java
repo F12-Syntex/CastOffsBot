@@ -191,7 +191,11 @@ public class CommandHandler extends Handler{
 
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setImage(entries.get(0));
-                builder.setTitle(rawWithoutCommand);
+                
+                if(rawWithoutCommand.length() > 0){
+                    builder.setTitle(rawWithoutCommand);
+                }
+
                 builder.setColor(Color.pink);
 
                 System.out.println(entries.get(0));
