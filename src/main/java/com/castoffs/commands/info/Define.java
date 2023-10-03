@@ -22,7 +22,7 @@ import net.dv8tion.jda.api.Permission;
              description = "urbun dictionary definition of something.",
              category = Category.INFO,
              usage = {"define <user:text required>"},
-             examples = {"hgay sacrosanct"})
+             examples = {"define sacrosanct"})
 public class Define extends Command{
 
     public Define(Dependencies dependencies) {
@@ -45,8 +45,11 @@ public class Define extends Command{
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(html, JsonObject.class);
 
+            String term = jsonObject.get("term").getAsString();
+            String directUrl = "https://www.urbandictionary.com/define.php?term=" + term;
+
             EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle(jsonObject.get("term").getAsString());
+            builder.setTitle(jsonObject.get("term").getAsString(), directUrl);
             builder.setColor(Color.pink);
             
             JsonObject data = jsonObject.get("data").getAsJsonArray().get(0).getAsJsonObject();
@@ -55,7 +58,7 @@ public class Define extends Command{
             String examples = data.get("example").getAsString();
 
             if(examples != null){
-                builder.addField("Exmaples", "`" + examples + "`", true);
+                builder.addField("Examples", "`" + examples + "`", true);
             }
 
 
