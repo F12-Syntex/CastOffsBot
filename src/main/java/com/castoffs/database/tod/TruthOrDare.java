@@ -25,6 +25,10 @@ public class TruthOrDare {
         this.dares.add(dare);
     }
 
+    /**
+     * gets a random truth, where the weight of each truth depends on how many times it has been used
+     * @return
+     */
     public String getRandomTruth() {
         return this.truths.get(ThreadLocalRandom.current().nextInt(this.truths.size()));
     }
@@ -39,6 +43,10 @@ public class TruthOrDare {
 
     public List<String> getDares() {
         return this.dares;
+    }
+
+    public TodWrapper getWrapper() {
+        return new TodWrapper(this);
     }
     
 }

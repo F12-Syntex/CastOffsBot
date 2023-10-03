@@ -21,6 +21,7 @@ import com.castoffs.handler.Dependencies;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -41,7 +42,7 @@ public class Tod extends Command{
     @Override
     public void onCommandRecieved(CommandRecivedEvent event) {
         Message message = event.getMessage();
-        this.reply(message, TruthOrDareType.any());
+        this.reply(message, TruthOrDareType.any(), event.getAuthor());
     }
 
     @Override
@@ -50,35 +51,49 @@ public class Tod extends Command{
     }
 
     @SuppressWarnings("null")
-    public void reply(Object messageInteraction, TruthOrDareType type){
+    public void reply(Object messageInteraction, TruthOrDareType type, User caller){
         TruthOrDare tod = this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare();
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(COLOR);
-        embed.setFooter("Type: " + type.toString() + " | " + UUID.randomUUID().toString());
+        embed.setFooter("Type: " + type.toString() + " | " + UUID.randomUUID().toString() + " | " + caller.getEffectiveName(), caller.getAvatarUrl());
         
         if(type == TruthOrDareType.TRUTH){
-            embed.setTitle(tod.getRandomTruth());
+            embed.setTitle(tod.getWrapper().getRandomTruth());
         }
         if(type == TruthOrDareType.DARE){
-            embed.setTitle(tod.getRandomDare());
+            embed.setTitle(tod.getWrapper().getRandomDare());
         }
 
         CommandButton any = CommandButton.primary("Random", (e) -> {
             Message msg = e.getMessage();
-            this.reply(msg, TruthOrDareType.any());
+            this.reply(msg, TruthOrDareType.any(), e.getUser());
             e.deferEdit().queue();
         });
 
         CommandButton truth = CommandButton.success("Truth", (e) -> {
             Message msg = e.getMessage();
-            this.reply(msg, TruthOrDareType.TRUTH);
+            this.reply(msg, TruthOrDareType.TRUTH, e.getUser());
             e.deferEdit().queue();
         });
 
         CommandButton dare = CommandButton.danger("Dare", (e) -> {
             Message msg = e.getMessage();
-            this.reply(msg, TruthOrDareType.DARE);
+            this.reply(msg, TruthOrDareType.DARE, e.getUser());
+            e.deferEdit().queue();
+        });
+
+        CommandButton change = CommandButton.secondary("Change", (e) -> {
+            Message msg = e.getMessage();
+            
+            if(type == TruthOrDareType.TRUTH){
+                embed.setTitle(tod.getWrapper().getRandomTruth());
+            }
+            if(type == TruthOrDareType.DARE){
+                embed.setTitle(tod.getWrapper().getRandomDare());
+            }
+
+            msg.editMessageEmbeds(embed.build()).queue();
             e.deferEdit().queue();
         });
 
@@ -86,6 +101,7 @@ public class Tod extends Command{
         buttons.add(any);
         buttons.add(truth);
         buttons.add(dare);
+        buttons.add(change);
 
         if(messageInteraction instanceof SlashCommandInteractionEvent){
             SlashCommandInteractionEvent event = (SlashCommandInteractionEvent) messageInteraction;
@@ -98,12 +114,14 @@ public class Tod extends Command{
                         buttons.forEach(button -> button.disable());
                         //remove the button from the message
                         List<Button> disabledButtons = buttons.stream().map(o -> o.asDisabled()).collect(Collectors.toList());
-                        event.getHook().editOriginalEmbeds(embed.build()).setActionRow(disabledButtons).queue();
+                        EmbedBuilder builder = embed.setFooter("Type: " + type.toString() + " | " + UUID.randomUUID().toString() + " | " + caller.getEffectiveName(), caller.getAvatarUrl());
+                        event.getHook().editOriginalEmbeds(builder.build()).setActionRow(disabledButtons).queue();
                     }
                 }, DELAY);
             }, (fail -> {}));
         }else{
             Message message = (Message) messageInteraction;
+
             message.replyEmbeds(embed.build()).addActionRow(buttons).queue((msg) -> {
                 //disable the button after 10 seconds
                 Timer timer = new Timer();
@@ -113,12 +131,11 @@ public class Tod extends Command{
                         buttons.forEach(button -> button.disable());
                         //remove the button from the message
                         List<Button> disabledButtons = buttons.stream().map(o -> o.asDisabled()).collect(Collectors.toList());
-                        msg.editMessageEmbeds(embed.build()).setActionRow(disabledButtons).queue();
+                        EmbedBuilder builder = embed.setFooter("Type: " + type.toString() + " | " + UUID.randomUUID().toString() + " | " + caller.getEffectiveName(), caller.getAvatarUrl());
+                        msg.editMessageEmbeds(builder.build()).setActionRow(disabledButtons).queue();
                     }
                 }, DELAY);
             }, (fail -> {}));
         }
-
     }
-    
 }
