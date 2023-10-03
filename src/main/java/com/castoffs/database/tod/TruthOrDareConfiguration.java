@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.castoffs.database.Configuration;
 import com.castoffs.handler.Dependencies;
-import com.castoffs.utils.FileUtils;
+import com.castoffs.utils.HtmlUtils;
 import com.google.gson.Gson;
 
 public class TruthOrDareConfiguration extends Configuration{
@@ -18,9 +18,11 @@ public class TruthOrDareConfiguration extends Configuration{
     @Override
     public void load() {
 
-
-        String contents = FileUtils.readFile(this.file);
+        // String contents = FileUtils.readFile(this.file);
+        String contents = HtmlUtils.getHtml("https://raw.githubusercontent.com/F12-Syntex/CastOffsBot/master/Castoffs/information/truthOrDare.json");
         String gson;
+
+        System.out.println(contents);
         
         if (contents.isEmpty()) {
             gson = "{}"; // Empty JSON object
@@ -31,6 +33,7 @@ public class TruthOrDareConfiguration extends Configuration{
             gson = contents;
         }
     
+        
         this.truthOrDare = new Gson().fromJson(gson, TruthOrDare.class);
     }
 

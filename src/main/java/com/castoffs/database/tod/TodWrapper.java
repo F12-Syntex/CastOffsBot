@@ -10,46 +10,45 @@ public class TodWrapper {
     private List<String> truths;
     private List<String> dares;
 
+    private int truthCalls = 0;
+    private int dareCalls = 0;
+
     public TodWrapper(TruthOrDare truthOrDare) {
         this.truthOrDare = truthOrDare;
 
         this.truths = truthOrDare.getTruths();
         this.dares = truthOrDare.getDares();
-
-        this.reset();
     }
 
     public TruthOrDare getTruthOrDare() {
         return this.truthOrDare;
     }
 
-    public synchronized void reset(){
-        this.getTruthOrDare().getTruths().stream().forEach(truth -> this.truths.add(truth));
-        this.getTruthOrDare().getDares().stream().forEach(dare -> this.dares.add(dare));
-
-        Collections.shuffle(dares);
-        Collections.shuffle(truths);
-    }
-
     public String getRandomTruth() {
-
-        if(this.truths.isEmpty()){
-            this.reset();
-        }
-
         String truth = this.truths.get(0);
         this.truths.remove(0);
+        this.truths.add(truth);
+        truthCalls++;
+
+        if(truthCalls == truths.size()){
+            Collections.shuffle(truths);
+            truthCalls = 0;
+        }
+
         return truth;
     }
 
     public String getRandomDare() {
-
-        if(this.dares.isEmpty()){
-            this.reset();
-        }
-
         String dare = this.dares.get(0);
         this.dares.remove(0);
+        this.dares.add(dare);
+        dareCalls++;
+
+        if(dareCalls == dares.size()){
+            Collections.shuffle(dares);
+            dareCalls = 0;
+        }
+
         return dare;
     }
     
