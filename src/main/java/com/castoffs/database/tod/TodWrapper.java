@@ -23,9 +23,9 @@ public class TodWrapper {
         return this.truthOrDare;
     }
 
-    public void reset(){
-        this.truths = truthOrDare.getTruths();
-        this.dares = truthOrDare.getDares();
+    public synchronized void reset(){
+        this.getTruthOrDare().getTruths().stream().forEach(truth -> this.truths.add(truth));
+        this.getTruthOrDare().getDares().stream().forEach(dare -> this.dares.add(dare));
 
         Collections.shuffle(dares);
         Collections.shuffle(truths);

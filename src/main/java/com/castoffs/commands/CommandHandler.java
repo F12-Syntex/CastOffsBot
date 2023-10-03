@@ -1,6 +1,9 @@
 package com.castoffs.commands;
 
+import java.awt.Color;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +20,11 @@ import com.castoffs.bot.Settings;
 import com.castoffs.embeds.EmbedMaker;
 import com.castoffs.handler.Dependencies;
 import com.castoffs.handler.Handler;
+import com.castoffs.utils.HtmlUtils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandHandler extends Handler{
     
@@ -147,6 +152,12 @@ public class CommandHandler extends Handler{
             //check if the message is a command
             if(!message.startsWith(Settings.PREFIX)) return;
 
+            if(event.getGuild().getId().equals("339615489246494722") && Settings.DEBUG){
+                EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Sorry", "syntex daddy is working on the bot, please wait.");
+                event.getMessage().replyEmbeds(error.build()).queue();
+                return;
+            }
+
             //get the command name
             String commandName = message.split(" ")[0].replace(Settings.PREFIX, "");
 
@@ -156,6 +167,37 @@ public class CommandHandler extends Handler{
             if(commandOptional.isEmpty()){
                 // EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Command not found", "The command `" + commandName + "` was not found.");
                 // event.getMessage().replyEmbeds(error.build()).queue();
+
+                //send a gif instead
+                String url = "https://giphy.com/search/anime-" + commandName.replace(" ", "-");
+
+                String content = HtmlUtils.getHtml(url);
+
+                String[] split = content.split("\"url\": \"");
+
+                List<String> entries = new ArrayList<>();
+
+                for(String i : split){
+                    String embed = i.split("\"")[0];
+                    if(embed.contains(".gif")){
+                        entries.add(embed);
+                    }
+                }
+
+                String raw = event.getMessage().getContentDisplay();
+                String rawWithoutCommand = raw.replace(Settings.PREFIX, "").replace(commandName, "").trim();
+
+                Collections.shuffle(entries);
+
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setImage(entries.get(0));
+                builder.setTitle(rawWithoutCommand);
+                builder.setColor(Color.pink);
+
+                System.out.println(entries.get(0));
+
+                event.getMessage().replyEmbeds(builder.build()).queue();
+
                 return;
             }
 
