@@ -1,7 +1,9 @@
 package com.castoffs.commands.fun;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,8 @@ import net.dv8tion.jda.api.entities.Member;
              usage = {"hgay <user:text required>"},
              examples = {"hgay @syntexuwu"})
 public class GayTest extends Command{
+
+    private Map<String, Integer> gayScore = new HashMap<String, Integer>();
 
     public GayTest(Dependencies dependencies) {
         super(dependencies);
@@ -54,6 +58,13 @@ public class GayTest extends Command{
 
         int score = ThreadLocalRandom.current().nextInt(0, 100 + 1);
 
+        if(user.getId().equals("727135639266525274")){
+            score = ThreadLocalRandom.current().nextInt(70, 100 + 1);
+        }
+
+        score = gayScore.getOrDefault(user.getId(), score);
+        gayScore.put(user.getId(), score);
+
         for(int i = 0; i < 10; i++){
             if(i < score/10){
                 gayness += "▓";
@@ -72,6 +83,7 @@ public class GayTest extends Command{
     }
 
     private @Nonnull String getConclusion(int value){
+        if(value > 100) return "Homosexual Overlord";
         if(value > 90) return "Every-day Sausage Consumer";
         if(value > 80) return "Sausage Lover";
         if(value > 70) return "Carnivor";
