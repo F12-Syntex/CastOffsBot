@@ -193,6 +193,12 @@ public class CommandHandler extends Handler{
             //get the command in question
             Command command = commandOptional.get();
 
+            if(!command.getMetaInformation().completed()){
+                EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Sorry", "syntex daddy is working on this command, please wait.");
+                event.getMessage().replyEmbeds(error.build()).queue();
+                return;
+            }
+
             //check if the user has permissions to run the command
             List<Permission> permission = command.getDefaultMemberPermissions();
 
