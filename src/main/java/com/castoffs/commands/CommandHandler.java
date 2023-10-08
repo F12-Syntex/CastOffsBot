@@ -2,12 +2,11 @@ package com.castoffs.commands;
 
 import java.awt.Color;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -15,16 +14,15 @@ import javax.annotation.Nonnull;
 
 import org.reflections.Reflections;
 
+import com.castoffs.apis.gifs.GifApi;
 import com.castoffs.bot.Castoffs;
 import com.castoffs.bot.Settings;
 import com.castoffs.embeds.EmbedMaker;
 import com.castoffs.handler.Dependencies;
 import com.castoffs.handler.Handler;
-import com.castoffs.utils.HtmlUtils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandHandler extends Handler{
     
@@ -169,28 +167,15 @@ public class CommandHandler extends Handler{
                 // event.getMessage().replyEmbeds(error.build()).queue();
 
                 //send a gif instead
-                String url = "https://giphy.com/search/anime-" + commandName.replace(" ", "-");
-
-                String content = HtmlUtils.getHtml(url);
-
-                String[] split = content.split("\"url\": \"");
-
-                List<String> entries = new ArrayList<>();
-
-                for(String i : split){
-                    String embed = i.split("\"")[0];
-                    if(embed.contains(".gif")){
-                        entries.add(embed);
-                    }
-                }
+                List<String> entries = GifApi.query(commandName);
 
                 String raw = event.getMessage().getContentDisplay();
                 String rawWithoutCommand = raw.replace(Settings.PREFIX, "").replace(commandName, "").trim();
 
-                Collections.shuffle(entries);
+                int randomIndex = ThreadLocalRandom.current().nextInt(entries.size());
 
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setImage(entries.get(0));
+                builder.setImage(entries.get(randomIndex));
                 
                 if(rawWithoutCommand.length() > 0){
                     builder.setTitle(rawWithoutCommand);
