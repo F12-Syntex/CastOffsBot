@@ -11,7 +11,12 @@
     "If you could marry one person here, who would it be?",
     "When was the last time you cried?",
     "Ping the person you hate the most in this server?",
-    "When was the last time you took a shower?"
+    "When was the last time you took a shower?",
+    "Have you ever accidentally sent a text or message to the wrong person? What did it say?",
+    "Have you ever been caught talking to yourself? What were you saying?",
+    "Have you ever laughed so hard that you snorted? When and why?",
+    "What's the most embarrassing autocorrect fail you've ever had in a message?",
+    "Have you ever been caught watching or listening to something inappropriate?"
   ],
   "dares": [
     "Ping your favorite person.",
@@ -27,6 +32,8 @@
     "Say something wholesome.",
     "Send the last picture in your gallery.",
     "Send the last meme you saved.",
-    "Send the last meme you laughed at."
+    "Send the last meme you laughed at.",
+    "Share a screenshot of your favorite Discord bot's response to a command.",
+    "Record a voice message of you saying something random."
   ]
 }
