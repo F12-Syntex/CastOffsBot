@@ -37,34 +37,41 @@ public class Define extends Command{
 
         EmbedMaker.runAsyncTask(event.getMessage(), event.getAuthor(), (message) -> {
 
-            String word = event.getArgumentAtIndexAsString(1);
+            try{
 
-            String url = "https://unofficialurbandictionaryapi.com/api/search?term=" + word + "&strict=false&matchCase=false&limit=1&page=1&multiPage=false";
-            String html = HtmlUtils.getHtml(url);
+                String word = event.getArgumentAtIndexAsString(1);
 
-            Gson gson = new Gson();
-            JsonObject jsonObject = gson.fromJson(html, JsonObject.class);
+                String url = "https://unofficialurbandictionaryapi.com/api/search?term=" + word + "&strict=false&matchCase=false&limit=1&page=1&multiPage=false";
+                String html = HtmlUtils.getHtml(url);
 
-            String term = jsonObject.get("term").getAsString();
-            String directUrl = "https://www.urbandictionary.com/define.php?term=" + term;
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(html, JsonObject.class);
 
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle(jsonObject.get("term").getAsString(), directUrl);
-            builder.setColor(Color.pink);
-            
-            JsonObject data = jsonObject.get("data").getAsJsonArray().get(0).getAsJsonObject();
+                String term = jsonObject.get("term").getAsString();
+                String directUrl = "https://www.urbandictionary.com/define.php?term=" + term;
 
-            String definition = data.get("meaning").getAsString();
-            String examples = data.get("example").getAsString();
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setTitle(jsonObject.get("term").getAsString(), directUrl);
+                builder.setColor(Color.pink);
+                
+                JsonObject data = jsonObject.get("data").getAsJsonArray().get(0).getAsJsonObject();
 
-            if(examples != null){
-                builder.addField("Examples", "`" + examples + "`", true);
+                String definition = data.get("meaning").getAsString();
+                String examples = data.get("example").getAsString();
+
+                if(examples != null){
+                    builder.addField("Examples", "`" + examples + "`", true);
+                }
+
+
+                builder.setDescription(definition);
+
+                message.editMessageEmbeds(builder.build()).queue();
+
+            }catch(Exception e){
+                throw new IllegalArgumentException("Could not find a definition for that word.");
             }
 
-
-            builder.setDescription(definition);
-
-            message.editMessageEmbeds(builder.build()).queue();
         });
 
     }
