@@ -18,6 +18,9 @@ public class TodWrapper {
 
         this.truths = truthOrDare.getTruths();
         this.dares = truthOrDare.getDares();
+
+        Collections.shuffle(truths);
+        Collections.shuffle(dares);
     }
 
     public TruthOrDare getTruthOrDare() {
