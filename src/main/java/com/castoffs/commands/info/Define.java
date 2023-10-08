@@ -69,7 +69,8 @@ public class Define extends Command{
                 message.editMessageEmbeds(builder.build()).queue();
 
             }catch(Exception e){
-                throw new IllegalArgumentException("Could not find a definition for that word.");
+                 EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Couldn't find the definition for your query" , e.getLocalizedMessage());
+                 message.editMessageEmbeds(error.build()).queue();
             }
 
         });
