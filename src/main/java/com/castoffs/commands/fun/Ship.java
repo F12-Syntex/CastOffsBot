@@ -53,13 +53,22 @@ public class Ship extends Command{
 
         int score = ThreadLocalRandom.current().nextInt(1, 101);
 
-        User user1 = users.get(0);
+        User user1 = null;
         User user2 = null;
 
-        if(users.size() > 1){
+        if(users.size() == 1){
+            user1 = event.getMessage().getAuthor();
+            user2 = users.get(0);
+        }
+
+        if(users.size() == 2){
+            user1 = users.get(0);
             user2 = users.get(1);
-        }else{
-            user2 = user1;
+        }
+
+
+        if(user1.getId().equals("760189502063902750") || user2.getId().equals("760189502063902750")){
+            score = -6969;
         }
 
         File tempFile = getFile(user1, user2, score);
@@ -162,6 +171,7 @@ public class Ship extends Command{
             int margin = 50;
             int heigthOfProgressBar = height/10;
             int borderRaduis = 15;
+            File fontFile = new File("Castoffs" + File.separator + "assets" + File.separator + "fonts" + File.separator + "Gabarito.ttf");
 
             // Reset the clipping region
             graphics.setClip(null);
@@ -176,7 +186,16 @@ public class Ship extends Command{
 
             //draw the percentage text at the end of the progress bar
             graphics.setColor(Color.white);
-            graphics.setFont(new Font("Arial", Font.BOLD, 52));
+
+            //use the font that's in the font file fontFile
+            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+
+            //set the font size to 52px
+            font = font.deriveFont(52f).deriveFont(Font.BOLD);
+
+            //set the font to the graphics object
+            graphics.setFont(font);
+
             graphics.drawString(score + "%", width - (int)(2.5*margin), height - (int)(margin*0.75) - heigthOfProgressBar/2);
 
             // Dispose the graphics object
@@ -191,7 +210,7 @@ public class Ship extends Command{
             }
 
             return tempFile;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
