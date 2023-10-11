@@ -21,8 +21,12 @@ import com.castoffs.commands.Category;
 import com.castoffs.commands.Command;
 import com.castoffs.commands.CommandMeta;
 import com.castoffs.commands.CommandRecivedEvent;
+import com.castoffs.database.ship.ShipData;
+import com.castoffs.database.ship.ShipEntry;
 import com.castoffs.handler.Dependencies;
+import com.castoffs.utils.StringUtils;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -71,17 +75,69 @@ public class Ship extends Command{
             score = -6969;
         }
 
+        if(user1.getId().equals("734026534167511071") || user2.getId().equals("734026534167511071")){
+            score = 100;
+        }
+
+        ShipData shipData = this.dependencies.getStorage().getInformationStorage().getShip().getShipData();
+
+        if(!shipData.containsEntry(user1.getId(), user2.getId())){
+            ShipEntry shipEntry = new ShipEntry(user1.getId(), user2.getId(), score);
+            shipData.addShipEntry(shipEntry);
+        }else{
+            score = shipData.getEntry(user1.getId(), user2.getId()).get().getScore();
+        }
+
         File tempFile = getFile(user1, user2, score);
+
+        //tempfile is an image, i want to send the image as the thubnail of the embed
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("❤️‍🔥 Matchmaking ❤️‍🔥");
+        embedBuilder.setColor(THEME_COLOUR);
+        embedBuilder.setDescription("##" + System.lineSeparator() +
+                                    StringUtils.beutifyString(user1.getEffectiveName()) + " x " + StringUtils.beutifyString(user2.getEffectiveName()) + System.lineSeparator() + 
+                                    this.getComment(score));
+        embedBuilder.setImage("attachment://ship.png");
+
 
         try (InputStream inputStream = new FileInputStream(tempFile)) {
             FileUpload data = FileUpload.fromData(tempFile, "ship.png");
-            event.getMessage().replyFiles(data).queue();
+             event.getMessage().replyEmbeds(embedBuilder.build()).addFiles(data).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         tempFile.delete();
     }
+
+    private String getComment(int score) {
+        String comment;
+    
+        if (score >= 90) {
+            comment = "You two are a perfect match made in syntex paradise! 🌴";
+        } else if (score >= 80) {
+            comment = "Your compatibility is off the charts! Ship ship ship! ⛵";
+        } else if (score >= 70) {
+            comment = "You make a lovely pair! Keep sailing together! 🐬";
+        } else if (score >= 60) {
+            comment = "There's potential for a great ship here! Smooth sailing ahead! 🌊";
+        } else if (score >= 50) {
+            comment = "You're on the right track! Keep exploring the sea of love! 🌊";
+        } else if (score >= 40) {
+            comment = "Looks like there might be some waves to navigate. Keep searching for your ship! ⚓️";
+        } else if (score >= 30) {
+            comment = "Don't give up! Your ship might be just around the corner! 🌅";
+        } else if (score >= 20) {
+            comment = "Love is an adventure! Keep exploring the vast ocean of possibilities! 🌊";
+        } else if (score >= 10) {
+            comment = "Every journey starts with a single step. Keep moving forward and find your ship! ⛵";
+        } else {
+            comment = "Hmm... It seems like there might be some rough waters ahead. Keep exploring! 🌊";
+        }
+    
+        return comment;
+    }
+    
 
     public File getFile(User user1, User user2, int score){
         try{
@@ -103,7 +159,16 @@ public class Ship extends Command{
             String img1 = user1.getAvatarUrl();
             String img2 = user2.getAvatarUrl();;
             String backgroundImg = "https://cdn.pixabay.com/photo/2017/04/10/15/06/cherry-blossoms-2218781_1280.jpg";
-            String heartEmoji = "https://www.nicepng.com/png/full/174-1746878_ios-emoji-emoji-iphone-ios-heart-hearts-spin.png";
+
+            String heartEmoji1 = "https://www.freeiconspng.com/uploads/heart-png-15.png";
+            String heartEmoji2 = "https://pngimg.com/uploads/broken_heart/broken_heart_PNG39.png";
+            String heartEmoji = "";
+
+            if(score < 50){
+                heartEmoji = heartEmoji2;
+            }else{
+                heartEmoji = heartEmoji1;
+            }
 
             // Load the background image from the URL
             ImageIcon backgroundImage = new ImageIcon(new URL(backgroundImg));
@@ -196,13 +261,19 @@ public class Ship extends Command{
             //set the font to the graphics object
             graphics.setFont(font);
 
-            graphics.drawString(score + "%", width - (int)(2.5*margin), height - (int)(margin*0.75) - heigthOfProgressBar/2);
+
+            //draw string with anti aliasing
+            graphics.setRenderingHint(
+                java.awt.RenderingHints.KEY_TEXT_ANTIALIASING,
+                java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            graphics.drawString(score + "%", width - (int)(2.75*margin), height - (int)(margin*0.75) - heigthOfProgressBar/2);
 
             // Dispose the graphics object
             graphics.dispose();
 
              // Write the image to a temporary file
-            File tempFile = File.createTempFile("image", ".png");
+            File tempFile = File.createTempFile("ship", ".png");
             ImageIO.write(image, "PNG", tempFile);
 
             if(tempFile == null){
