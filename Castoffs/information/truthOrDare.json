@@ -16,7 +16,21 @@
     "Have you ever been caught talking to yourself? What were you saying?",
     "Have you ever laughed so hard that you snorted? When and why?",
     "What's the most embarrassing autocorrect fail you've ever had in a message?",
-    "Have you ever been caught watching or listening to something inappropriate?"
+    "Have you ever been caught watching or listening to something inappropriate?",
+    "What's the most embarrassing thing you've done in front of a crowd?",
+    "Who is the smartest person here?",
+    "Who is the dumbest person here?",
+    "If you could have 3 wishes, would would they be?",
+    "What's the meanest thing you've ever said to someone else?",
+    "What's one thing you'd do if you knew there no consequences?",
+    "What's something you love to do with your friends that you'd never do in front of your partner?",
+    "How many selfies do you take a day?",
+    "Where are you ticklish?",
+    "What app do you waste the most time on?",
+    "What's the weirdest thing you've done on a plane?",
+    "What's the longest you've gone without showering?",
+    "What celebrity do you think is overrated?",
+    " Have you ever seen a dead body?"
   ],
   "dares": [
     "Ping your favorite person.",
@@ -26,14 +40,15 @@
     "Add 'rawr >.<' at the end of every message for the next 3 messages.",
     "ping you're bestie 'i recently discovered that i am into furries, so any single furry out there, hit me up 😳'",
     "DM 'hey..i just wanted to tell you that lately you're all i can think about' to the 5th person in your DMs which isn't a bot or gc and don't reply after that for a few hours.",
-    "Say something ironic.",
-    "Say something sarcastic.",
-    "Say something funny.",
     "Say something wholesome.",
     "Send the last picture in your gallery.",
     "Send the last meme you saved.",
     "Send the last meme you laughed at.",
     "Share a screenshot of your favorite Discord bot's response to a command.",
-    "Record a voice message of you saying something random."
+    "Record a voice message of you saying something random.",
+    "Send a random gif.",
+    "Send a random picture.",
+    "Send a voice note of yourself saying something random",
+    "Send a random meme."
   ]
 }

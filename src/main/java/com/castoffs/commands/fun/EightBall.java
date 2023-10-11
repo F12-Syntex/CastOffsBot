@@ -60,7 +60,7 @@ public class EightBall extends Command{
 
     @Override
     public @Nonnull List<Permission> getDefaultMemberPermissions() {
-        return this.defaultCommands();
+        return this.defaultCommandPermissions();
     }
     
 }

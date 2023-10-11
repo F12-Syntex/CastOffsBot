@@ -64,7 +64,7 @@ public abstract class Command {
         return cooldown;
     }
 
-    public @Nonnull List<Permission> defaultCommands() {
+    public @Nonnull List<Permission> defaultCommandPermissions() {
         List<Permission> permissions = new ArrayList<>();
         permissions.add(Permission.MESSAGE_HISTORY);
         return permissions;

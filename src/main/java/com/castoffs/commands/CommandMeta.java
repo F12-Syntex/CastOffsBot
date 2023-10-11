@@ -20,6 +20,7 @@ public @interface CommandMeta {
     @NotNull @Nonnull Category category();
     @NotNull @Nonnull String[] usage();
     @NotNull @Nonnull String[] examples();
+    @NotNull boolean nsfw() default false;
     @NotNull boolean completed() default true;
     @NotNull long cooldown() default 0L;
 }

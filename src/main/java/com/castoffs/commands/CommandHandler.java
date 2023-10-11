@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,9 @@ import com.castoffs.handler.Handler;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandHandler extends Handler{
     
@@ -150,7 +154,9 @@ public class CommandHandler extends Handler{
             //check if the message is a command
             if(!message.startsWith(Settings.PREFIX)) return;
 
-            if(event.getGuild().getId().equals("339615489246494722") && Settings.DEBUG){
+            boolean isGuildTheCastOffs = event.getGuild().getId().equals("339615489246494722");
+
+            if(isGuildTheCastOffs && Settings.DEBUG){
                 EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Sorry", "syntex daddy is working on the bot, please wait.");
                 event.getMessage().replyEmbeds(error.build()).queue();
                 return;
@@ -193,10 +199,36 @@ public class CommandHandler extends Handler{
             //get the command in question
             Command command = commandOptional.get();
 
-            if(!command.getMetaInformation().completed()){
-                EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Sorry", "syntex daddy is working on this command, please wait.");
+            if(!command.getMetaInformation().completed() && isGuildTheCastOffs){
+                EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "You can't do that command just yet.", "daddy syntex is working on this command, please wait.");
                 event.getMessage().replyEmbeds(error.build()).queue();
                 return;
+            }
+
+            if(command.getMetaInformation().nsfw()){
+                if(event.getChannelType() == ChannelType.TEXT && 
+                    event.getChannel().getName().equalsIgnoreCase("general")){
+
+                        //find all bot commands channels
+                        Set<String> botCommandsChannels = event.getGuild().getChannels(false).stream()
+                                                    .filter(o -> o.getName().equalsIgnoreCase("bot-commands"))
+                                                    .filter(o -> o.getType() == ChannelType.TEXT)
+                                                    .map(o -> o.getAsMention())
+                                                    .collect(Collectors.toSet());
+                        
+                        String channels = botCommandsChannels.stream().collect(Collectors.joining(", "));
+
+                        EmbedBuilder error = new EmbedBuilder();
+                        error.setTitle("NSFW command");
+                        error.setColor(Color.red);
+
+                        error.setDescription("This command is NSFW, please use it in one of the following channels: " + channels);
+
+
+
+                        event.getMessage().replyEmbeds(error.build()).queue();
+                        return;
+                    }
             }
 
             //check if the user has permissions to run the command

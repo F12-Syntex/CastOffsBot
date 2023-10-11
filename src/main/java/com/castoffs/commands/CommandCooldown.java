@@ -93,6 +93,6 @@ public class CommandCooldown {
      */
     public String getRemainingCooldownFormatted(String userId) {
         long remaining = this.getRemainingCooldown(userId);
-        return TimeUtils.formatDuration(remaining);
+        return TimeUtils.formatDuration(remaining/1000);
     }
 }
