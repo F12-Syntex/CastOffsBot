@@ -70,9 +70,6 @@ public class Ship extends Command{
             user2 = users.get(1);
         }
 
-        if(user1.getId().equals("234004050201280512") || user2.getId().equals("234004050201280512")){
-            score = ThreadLocalRandom.current().nextInt(50, 101);
-        }
 
         ShipData shipData = this.dependencies.getStorage().getInformationStorage().getShip().getShipData();
 
@@ -83,17 +80,22 @@ public class Ship extends Command{
             score = shipData.getEntry(user1.getId(), user2.getId()).get().getScore();
         }
 
-        if(user1.getId().equals("760189502063902750") || user2.getId().equals("760189502063902750")){
-            score = -6969;
-        }
-
         if(user1.getId().equals("734026534167511071") || user2.getId().equals("734026534167511071")){
             score = 100;
         }
 
-        if(user1.getId().equals("464480828819374090") || user2.getId().equals("464480828819374090")){
-            score = 696;
+        if(user1.getId().equals("234004050201280512") || user2.getId().equals("234004050201280512")){
+            score = ThreadLocalRandom.current().nextInt(30, 101);
         }
+
+        // if(user1.getId().equals("464480828819374090") || user2.getId().equals("464480828819374090")){
+        //     score = 696;
+        // }
+
+        if(user1.getId().equals("760189502063902750") || user2.getId().equals("760189502063902750")){
+            score = -6969;
+        }
+
 
         File tempFile = getFile(user1, user2, score);
 

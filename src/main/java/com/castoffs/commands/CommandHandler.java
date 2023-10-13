@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class CommandHandler extends Handler{
@@ -206,13 +207,13 @@ public class CommandHandler extends Handler{
             }
 
             if(command.getMetaInformation().nsfw()){
-                if(event.getChannelType() == ChannelType.TEXT && 
-                    event.getChannel().getName().equalsIgnoreCase("general")){
+                if(event.getChannelType() == ChannelType.TEXT && !((TextChannel)event.getChannel()).isNSFW()){
 
                         //find all bot commands channels
                         Set<String> botCommandsChannels = event.getGuild().getChannels(false).stream()
-                                                    .filter(o -> o.getName().equalsIgnoreCase("bot-commands"))
                                                     .filter(o -> o.getType() == ChannelType.TEXT)
+                                                    .map(o -> (TextChannel)o)
+                                                    .filter(o -> o.isNSFW())
                                                     .map(o -> o.getAsMention())
                                                     .collect(Collectors.toSet());
                         
@@ -222,8 +223,11 @@ public class CommandHandler extends Handler{
                         error.setTitle("NSFW command");
                         error.setColor(Color.red);
 
-                        error.setDescription("This command is NSFW, please use it in one of the following channels: " + channels);
-
+                        if(channels.isEmpty()){
+                            error.setDescription("This command is NSFW and you can't use it yet as there are no NSFW channels.");
+                        }else{
+                            error.setDescription("This command is NSFW, please use it in one of the following (nsfw) channels: " + channels);
+                        }
 
 
                         event.getMessage().replyEmbeds(error.build()).queue();
