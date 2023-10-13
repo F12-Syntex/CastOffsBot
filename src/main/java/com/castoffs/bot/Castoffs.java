@@ -54,7 +54,7 @@ public final class Castoffs extends ListenerAdapter {
         storage.startup();
         dependencies.setStorage(storage);
 
-        String authToken = System.getenv("DISCORD_TOKEN_CASTOFF");
+        String authToken = System.getenv(Settings.getEnvKeyForToken());
         System.out.println("Token: " + authToken);
 
         this.builder = JDABuilder.createDefault(authToken)

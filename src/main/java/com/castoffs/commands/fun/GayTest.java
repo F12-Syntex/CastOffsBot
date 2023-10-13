@@ -73,7 +73,17 @@ public class GayTest extends Command{
             }
         }
 
-        EmbedBuilder.addField("Gay Score", score + "/100", true);
+        if(user.getId().equals("464480828819374090")){
+            score = 696;
+        }
+
+        if(score > 200){
+            EmbedBuilder.addField("Gay Score", "Infinity", true);
+            gayness = "🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈";
+        }else{
+            EmbedBuilder.addField("Gay Score", score + "/100", true);
+        }
+
         EmbedBuilder.addField("Conclusion", this.getConclusion(score), true);
         EmbedBuilder.addField("Gay meter", gayness, true);
 
