@@ -42,7 +42,7 @@ public class GayTest extends Command{
         List<Member> users = event.getMessage().getMentions().getMembers();
 
         if(users.size() == 0){
-            throw new IllegalArgumentException("You need to mention a user.");
+            users.add(event.getMember());
         }
 
         //get the user

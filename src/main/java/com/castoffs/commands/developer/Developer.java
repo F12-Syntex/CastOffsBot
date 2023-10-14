@@ -5,6 +5,9 @@ import com.castoffs.commands.CommandRecivedEvent;
 import com.castoffs.handler.Dependencies;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class Developer extends Command{
 
     @Override
     public void onCommandRecieved(CommandRecivedEvent event) {
-        event.getMessage().reply("Developer command recieved").queue();
+        
     }
 
     @Override

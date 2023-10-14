@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.User;
 @CommandMeta(alias = {"pp", "penis"},
              description = "Check the length of someones pp",
              category = Category.FUN,
-             nsfw = true,
+             nsfw = false,
              usage = {"pp <user:text optional>"},
              cooldown = 10 * 1000,
              examples = {"pp", "pp @syntexuwu"})
