@@ -1,5 +1,7 @@
 package com.castoffs.bot;
 
+import java.util.Optional;
+
 import net.dv8tion.jda.api.entities.User;
 
 /**
@@ -29,6 +31,23 @@ public enum UserReference {
             }
         }
         return false;
+    }
+
+    public static boolean isUser(UserReference reference, User user){
+        return user.getId().equals(reference.getId());
+    }
+
+    public static boolean isUser(UserReference reference, String id){
+        return id.equals(reference.getId());
+    }
+
+    public Optional<UserReference> getUserReference(User user){
+        for(UserReference reference : UserReference.values()){
+            if(reference.getId().equals(user.getId())){
+                return Optional.of(reference);
+            }
+        }
+        return Optional.empty();
     }
 
 }
