@@ -84,9 +84,9 @@ public class Ship extends Command{
             score = 100;
         }
 
-        if(user1.getId().equals("234004050201280512") || user2.getId().equals("234004050201280512")){
-            score = ThreadLocalRandom.current().nextInt(30, 101);
-        }
+        // if(user1.getId().equals("234004050201280512") || user2.getId().equals("234004050201280512")){
+        //     score = ThreadLocalRandom.current().nextInt(30, 101);
+        // }
 
         // if(user1.getId().equals("464480828819374090") || user2.getId().equals("464480828819374090")){
         //     score = 696;
