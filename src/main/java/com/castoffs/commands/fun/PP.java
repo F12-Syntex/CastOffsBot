@@ -32,7 +32,7 @@ public class PP extends Command{
     @Override
     public void onCommandRecieved(CommandRecivedEvent event) {
 
-        int length = ThreadLocalRandom.current().nextInt(1, 10);
+        int length = ThreadLocalRandom.current().nextInt(0, 10);
         String penisBuilder = "8" + "=".repeat(length) + "D";
 
         User user = event.getAuthor();
