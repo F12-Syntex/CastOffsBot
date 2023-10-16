@@ -152,7 +152,7 @@ public class Help extends Command{
 
         if(content == null) return;
 
-        embed.addField(Category.REACTIONS + " " + "reactions", content, false);
+        embed.addField(Category.REACTIONS.getEmoji() + " " + "reactions", content, false);
 
     }
 
