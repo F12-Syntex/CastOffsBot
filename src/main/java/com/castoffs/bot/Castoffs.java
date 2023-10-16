@@ -1,5 +1,6 @@
 package com.castoffs.bot;
 
+import java.util.Arrays;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -9,6 +10,7 @@ import javax.annotation.Nonnull;
 
 import com.castoffs.commands.CommandHandler;
 import com.castoffs.database.StorageManager;
+import com.castoffs.database.tod.TruthOrDare;
 import com.castoffs.handler.Dependencies;
 
 import net.dv8tion.jda.api.JDA;
@@ -48,6 +50,8 @@ public final class Castoffs extends ListenerAdapter {
     @SuppressWarnings("null")
     private Castoffs() {
         this.configureLogger();
+
+        System.out.println(Settings.isDebugging());
 
         //load the storage
         StorageManager storage = new StorageManager(this.dependencies);
@@ -109,6 +113,11 @@ public final class Castoffs extends ListenerAdapter {
                 });
 
             });
+
+        for(int i = 0; i < 200; i++){
+             TruthOrDare tod = this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare();
+             System.out.println(tod.getWrapper().getRandomAny());
+        }
 
         } catch (Exception e) {
             e.printStackTrace();

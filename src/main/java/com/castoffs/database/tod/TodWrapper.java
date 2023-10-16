@@ -1,17 +1,15 @@
 package com.castoffs.database.tod;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TodWrapper {
 
     private TruthOrDare truthOrDare;
 
-    private List<String> truths;
-    private List<String> dares;
-
-    private int truthCalls = 0;
-    private int dareCalls = 0;
+    private Stack<String> truths;
+    private Stack<String> dares;
 
     public TodWrapper(TruthOrDare truthOrDare) {
         this.truthOrDare = truthOrDare;
@@ -27,31 +25,32 @@ public class TodWrapper {
         return this.truthOrDare;
     }
 
-    public String getRandomTruth() {
-        String truth = this.truths.get(0);
-        this.truths.remove(0);
-        this.truths.add(truth);
-        truthCalls++;
+    public String getRandomAny(){
+        if(ThreadLocalRandom.current().nextBoolean()){
+            return this.getRandomTruth();
+        }
+        return this.getRandomDare();   
+    }
 
-        if(truthCalls == truths.size()){
+    public String getRandomTruth() {
+
+        if(this.truths.isEmpty()){
+            this.truths = truthOrDare.getTruths();
             Collections.shuffle(truths);
-            truthCalls = 0;
         }
 
+        String truth = this.truths.pop();
         return truth;
     }
 
     public String getRandomDare() {
-        String dare = this.dares.get(0);
-        this.dares.remove(0);
-        this.dares.add(dare);
-        dareCalls++;
 
-        if(dareCalls == dares.size()){
+        if(this.dares.isEmpty()){
+            this.dares = truthOrDare.getDares();
             Collections.shuffle(dares);
-            dareCalls = 0;
         }
 
+        String dare = this.dares.pop();
         return dare;
     }
     

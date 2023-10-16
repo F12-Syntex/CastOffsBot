@@ -157,7 +157,7 @@ public class CommandHandler extends Handler{
 
             boolean isGuildTheCastOffs = event.getGuild().getId().equals("339615489246494722");
 
-            if(isGuildTheCastOffs && Settings.DEBUG){
+            if(isGuildTheCastOffs && Settings.isDebugging()){
                 EmbedBuilder error = EmbedMaker.ERROR(event.getAuthor(), "Sorry", "syntex daddy is working on the bot, please wait.");
                 event.getMessage().replyEmbeds(error.build()).queue();
                 return;
