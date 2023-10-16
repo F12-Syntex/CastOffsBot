@@ -5,7 +5,8 @@ import javax.annotation.Nonnull;
 public enum Category {
     ADMIN("🔒"),
     FUN("🎉"),
-    INFO(":pencil:");
+    INFO(":pencil:"),
+    REACTIONS("👍");
 
     private @Nonnull String emoji;
 

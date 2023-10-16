@@ -7,13 +7,19 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.castoffs.bot.Settings;
 import com.castoffs.commands.Category;
 import com.castoffs.commands.Command;
 import com.castoffs.commands.CommandMeta;
 import com.castoffs.commands.CommandRecivedEvent;
 import com.castoffs.handler.Dependencies;
+import com.castoffs.utils.HtmlUtils;
 import com.castoffs.utils.TimeUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -34,6 +40,8 @@ public class Help extends Command{
 
         //search for the command
         Optional<Command> cmdOptional = this.dependencies.getCommandHandler().getCommand(command);
+
+        //
 
         if(!cmdOptional.isPresent()){
             throw new IllegalArgumentException("'" + command + "' is not a recognized command");
@@ -120,9 +128,32 @@ public class Help extends Command{
             embed.addField(category.getEmoji() + " " + name, content, false);
         }
 
+        //add reaction commands
+        this.appendReactionCommands(embed);
+
         embed.setFooter("type " + Settings.PREFIX + this.getMetaInformation().alias()[0] + " <command> for more info on a command");    
        
         event.getMessage().replyEmbeds(embed.build()).queue();
+    }
+
+    public void appendReactionCommands(EmbedBuilder embed){
+
+        JSONObject reactionCommands = new JSONObject(HtmlUtils.getHtml("https://api.otakugifs.xyz/gif/allreactions"));
+        JSONArray reactions = reactionCommands.getJSONArray("reactions");
+
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < reactions.length(); i++){
+            String reaction = reactions.getString(i);
+            if(reaction.contains("kiss")) continue;
+            builder.append("`;" + reaction + "`, ");
+        }
+
+        String content = builder.substring(0, builder.length() - 2);
+
+        if(content == null) return;
+
+        embed.addField(Category.REACTIONS + " " + "reactions", content, false);
+
     }
 
     @Override

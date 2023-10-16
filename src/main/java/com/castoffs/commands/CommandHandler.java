@@ -176,6 +176,10 @@ public class CommandHandler extends Handler{
                 //send a gif instead
                 List<String> entries = GifApi.query(commandName);
 
+                if(entries.isEmpty()){
+                    return;
+                }
+
                 String raw = event.getMessage().getContentDisplay();
                 String rawWithoutCommand = raw.replace(Settings.PREFIX, "").replace(commandName, "").trim();
 
