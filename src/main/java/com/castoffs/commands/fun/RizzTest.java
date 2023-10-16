@@ -3,6 +3,7 @@ package com.castoffs.commands.fun;
 import java.awt.Color;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -29,13 +30,9 @@ public class RizzTest extends Command{
 
     @Override
     public void onCommandRecieved(CommandRecivedEvent event) {
-
-        if(!event.isArgumentValidAtIndex(1)){
-            throw new IllegalArgumentException("You need to mention a user.");
-        }
-
+        
         //find the user
-        List<Member> users = event.getMessage().getMentions().getMembers();
+        List<Member> users = event.getMessage().getMentions().getMembers().stream().distinct().collect(Collectors.toList());
 
         if(users.size() == 0){
             users.add(event.getMember());

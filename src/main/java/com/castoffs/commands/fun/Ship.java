@@ -10,8 +10,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -48,75 +51,91 @@ public class Ship extends Command{
     @SuppressWarnings("null")
     @Override
     public void onCommandRecieved(CommandRecivedEvent event){
+        this.dependencies.getWorkerThreads().execute(() -> {
+            
+            List<User> users = event.getMessage().getMentions().getMembers().stream().map(o -> o.getUser()).distinct().collect(Collectors.toList());
 
-        if(event.getMessage().getMentions().getUsers().size() < 1){
-            throw new IllegalArgumentException("You need to mention a user.");
-        }
+            if(event.getMessage().getMentions().getUsers().size() < 1){
+                //add a random user from the server
+            users = event.getGuild().findMembers(member -> !member.getId().equals(event.getMessage().getAuthor().getId()) && member.hasAccess(event.getGuildChannel()))
+                                    .get()
+                                    .stream()
+                                    .map(o -> o.getUser())
+                                    .distinct()
+                                    .collect(Collectors.toList());
 
-        List<User> users = event.getMessage().getMentions().getUsers();
-
-        int score = ThreadLocalRandom.current().nextInt(1, 101);
-
-        User user1 = null;
-        User user2 = null;
-
-        if(users.size() == 1){
-            user1 = event.getMessage().getAuthor();
-            user2 = users.get(0);
-        }
-
-        if(users.size() == 2){
-            user1 = users.get(0);
-            user2 = users.get(1);
-        }
+            Collections.shuffle(users);
+            }
 
 
-        ShipData shipData = this.dependencies.getStorage().getInformationStorage().getShip().getShipData();
+            int score = ThreadLocalRandom.current().nextInt(1, 101);
 
-        if(!shipData.containsEntry(user1.getId(), user2.getId())){
-            ShipEntry shipEntry = new ShipEntry(user1.getId(), user2.getId(), score);
-            shipData.addShipEntry(shipEntry);
-        }else{
-            score = shipData.getEntry(user1.getId(), user2.getId()).get().getScore();
-        }
+            User user1 = null;
+            User user2 = null;
 
-        if(user1.getId().equals("734026534167511071") || user2.getId().equals("734026534167511071")){
-            score = 100;
-        }
+            if(users.size() == 1){
+                user1 = event.getMessage().getAuthor();
+                user2 = users.get(0);
+            }
 
-        // if(user1.getId().equals("234004050201280512") || user2.getId().equals("234004050201280512")){
-        //     score = ThreadLocalRandom.current().nextInt(30, 101);
-        // }
+            if(users.size() == 2){
+                user1 = users.get(0);
+                user2 = users.get(1);
+            }
 
-        // if(user1.getId().equals("464480828819374090") || user2.getId().equals("464480828819374090")){
-        //     score = 696;
-        // }
-
-        if(user1.getId().equals("760189502063902750") || user2.getId().equals("760189502063902750")){
-            score = -6969;
-        }
+            if(users.size() > 2){
+                user1 = event.getMessage().getAuthor();
+                user2 = users.get(1);
+            }
 
 
-        File tempFile = getFile(user1, user2, score);
+            ShipData shipData = this.dependencies.getStorage().getInformationStorage().getShip().getShipData();
 
-        //tempfile is an image, i want to send the image as the thubnail of the embed
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("❤️‍🔥 Matchmaking ❤️‍🔥");
-        embedBuilder.setColor(THEME_COLOUR);
-        embedBuilder.setDescription("##" + System.lineSeparator() +
-                                    StringUtils.beutifyString(user1.getEffectiveName()) + " x " + StringUtils.beutifyString(user2.getEffectiveName()) + System.lineSeparator() + 
-                                    this.getComment(score));
-        embedBuilder.setImage("attachment://ship.png");
+            if(!shipData.containsEntry(user1.getId(), user2.getId())){
+                ShipEntry shipEntry = new ShipEntry(user1.getId(), user2.getId(), score);
+                shipData.addShipEntry(shipEntry);
+            }else{
+                score = shipData.getEntry(user1.getId(), user2.getId()).get().getScore();
+            }
+
+            if(user1.getId().equals("734026534167511071") || user2.getId().equals("734026534167511071")){
+                score = 100;
+            }
+
+            // if(user1.getId().equals("234004050201280512") || user2.getId().equals("234004050201280512")){
+            //     score = ThreadLocalRandom.current().nextInt(30, 101);
+            // }
+
+            // if(user1.getId().equals("464480828819374090") || user2.getId().equals("464480828819374090")){
+            //     score = 696;
+            // }
+
+            if(user1.getId().equals("760189502063902750") || user2.getId().equals("760189502063902750")){
+                score = -6969;
+            }
 
 
-        try (InputStream inputStream = new FileInputStream(tempFile)) {
-            FileUpload data = FileUpload.fromData(tempFile, "ship.png");
-             event.getMessage().replyEmbeds(embedBuilder.build()).addFiles(data).queue();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            File tempFile = getFile(user1, user2, score);
 
-        tempFile.delete();
+            //tempfile is an image, i want to send the image as the thubnail of the embed
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle("❤️‍🔥 Matchmaking ❤️‍🔥");
+            embedBuilder.setColor(THEME_COLOUR);
+            embedBuilder.setDescription("##" + System.lineSeparator() +
+                                        StringUtils.beutifyString(user1.getEffectiveName()) + " x " + StringUtils.beutifyString(user2.getEffectiveName()) + System.lineSeparator() + 
+                                        this.getComment(score));
+            embedBuilder.setImage("attachment://ship.png");
+
+
+            try (InputStream inputStream = new FileInputStream(tempFile)) {
+                FileUpload data = FileUpload.fromData(tempFile, "ship.png");
+                event.getMessage().replyEmbeds(embedBuilder.build()).addFiles(data).queue();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            tempFile.delete();
+        });
     }
 
     private String getComment(int score) {
@@ -216,7 +235,7 @@ public class Ship extends Command{
             int thicknessBorder = 10;
 
             //draw a border around the first image which is a circle with a thickness of thicknessBorder
-            graphics.setColor(THEME_COLOUR.darker());
+            graphics.setColor(THEME_COLOUR);
             graphics.setClip(new Ellipse2D.Double(centerX1 - radius - thicknessBorder, centerY1 - radius - thicknessBorder, (radius + thicknessBorder) * 2, (radius + thicknessBorder) * 2));
             graphics.fillRect(centerX1 - radius - thicknessBorder, centerY1 - radius - thicknessBorder, (radius + thicknessBorder) * 2, (radius + thicknessBorder) * 2);
             
@@ -226,7 +245,7 @@ public class Ship extends Command{
             
 
             //draw a border around the second image which is a circle with a thickness of thicknessBorder
-            graphics.setColor(THEME_COLOUR.darker());
+            graphics.setColor(THEME_COLOUR);
             graphics.setClip(new Ellipse2D.Double(centerX2 - radius - thicknessBorder, centerY2 - radius - thicknessBorder, (radius + thicknessBorder) * 2, (radius + thicknessBorder) * 2));
             graphics.fillRect(centerX2 - radius - thicknessBorder, centerY2 - radius - thicknessBorder, (radius + thicknessBorder) * 2, (radius + thicknessBorder) * 2);
 

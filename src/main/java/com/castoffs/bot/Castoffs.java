@@ -114,11 +114,6 @@ public final class Castoffs extends ListenerAdapter {
 
             });
 
-        for(int i = 0; i < 200; i++){
-             TruthOrDare tod = this.dependencies.getStorage().getInformationStorage().getTruthOrDare().getTruthOrDare();
-             System.out.println(tod.getWrapper().getRandomAny());
-        }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

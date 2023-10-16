@@ -1,5 +1,9 @@
 package com.castoffs.handler;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import com.castoffs.bot.AutoBumpReminder;
 import com.castoffs.commands.CommandHandler;
 import com.castoffs.database.StorageManager;
@@ -21,6 +25,7 @@ public class Dependencies {
     private CommandHandler commandHandler; // The command handler for processing user commands
     private StorageManager storage;      // The storage manager for data storage and retrieval
     private AutoBumpReminder autoBumpReminder; // The auto bump reminder
+    private final ExecutorService workerThreads = Executors.newFixedThreadPool(5); // The executor service for running tasks
 
     /**
      * Set the JDA builder instance used for configuring the bot.
@@ -100,5 +105,13 @@ public class Dependencies {
      */
     public AutoBumpReminder getAutoBumpReminder() {
         return autoBumpReminder;
+    }
+
+    /**
+     * Get the executor service for running tasks.
+     * @return the executor service instance
+     */
+    public ExecutorService getWorkerThreads() {
+        return workerThreads;
     }
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -34,12 +35,8 @@ public class GayTest extends Command{
     @Override
     public void onCommandRecieved(CommandRecivedEvent event) {
 
-        if(!event.isArgumentValidAtIndex(1)){
-            throw new IllegalArgumentException("You need to mention a user.");
-        }
-
         //find the user
-        List<Member> users = event.getMessage().getMentions().getMembers();
+        List<Member> users = event.getMessage().getMentions().getMembers().stream().distinct().collect(Collectors.toList());
 
         if(users.size() == 0){
             users.add(event.getMember());

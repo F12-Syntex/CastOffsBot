@@ -30,7 +30,16 @@
     "What's the weirdest thing you've done on a plane?",
     "What's the longest you've gone without showering?",
     "What celebrity do you think is overrated?",
-    " Have you ever seen a dead body?"
+    "Have you ever seen a dead body?",
+    "What's the most useless talent you have?",
+    "What's the most useless piece of knowledge you know?",
+    "What's the most useless thing you've ever bought?",
+    "What's the most useless thing you've ever done?",
+    "Who is the most annoying person in this server?",
+    "What's the most annoying thing someone can do?",
+    "What is the cringiest thing you've ever done?",
+    "What is the cringiest thing you've seen someone do",
+    "Ping someone you'd mash"
   ],
   "dares": [
     "Ping your favorite person.",
@@ -49,6 +58,10 @@
     "Send a random gif.",
     "Send a random picture.",
     "Send a voice note of yourself saying something random",
-    "Send a random meme."
+    "Send a random meme.",
+    "Show us your wall paper",
+    "Show us your lock screen",
+    "Show us your home screen",
+    "Show us your most recent selfie"
   ]
 }
