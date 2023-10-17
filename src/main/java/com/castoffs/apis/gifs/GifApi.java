@@ -48,8 +48,8 @@ public class GifApi {
 
             return gifs;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException();
+            List<String> gifs = new ArrayList<>();
+            return gifs;
         }
     }
     
