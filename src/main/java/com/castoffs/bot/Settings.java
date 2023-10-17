@@ -11,6 +11,8 @@ public class Settings {
     public static final String VERSION = "v1.0.10";
     public static final String PREFIX = ";";
 
+    private final static boolean MAIN_BOT = true;
+
     public static String getEnvKeyForToken(){
         if(Settings.isDebugging()){
             return "DISCORD_TOKEN_CASTOFFS_DEBUG";
@@ -27,7 +29,7 @@ public class Settings {
         try {
             localMachine = InetAddress.getLocalHost();
             String computerName = localMachine.getHostName();
-            return computerName.equals("workstation");
+            return computerName.equals("workstation") && !MAIN_BOT;
         } catch (UnknownHostException e) {
             return false;
         }
