@@ -148,7 +148,9 @@ public class Help extends Command{
             builder.append("`;" + reaction + "`, ");
         }
 
-        String content = builder.substring(0, builder.length() - 2);
+        builder.append(";fugg");
+
+        String content = builder.toString();
 
         if(content == null) return;
 

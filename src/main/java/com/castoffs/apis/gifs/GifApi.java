@@ -14,6 +14,12 @@ public class GifApi {
     
     public static List<String> query(String query) {
         try {
+            
+            if(query.equals("fugg")){
+                List<String> gifs = new ArrayList<>();
+                gifs.add("https://media.tenor.com/8oy_9VcmVvEAAAAC/vorzek-vorzneck.gif");
+                return gifs;
+            }
 
             String encodedQuery = URLEncoder.encode(query, "UTF-8");
 
