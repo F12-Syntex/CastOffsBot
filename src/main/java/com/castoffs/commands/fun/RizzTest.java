@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.castoffs.bot.UserReference;
 import com.castoffs.commands.Category;
 import com.castoffs.commands.Command;
 import com.castoffs.commands.CommandMeta;
@@ -59,9 +60,20 @@ public class RizzTest extends Command{
             }
         }
 
+
+        if(user.getId().equals(UserReference.MAPLE.getId())){
+            score = Integer.MAX_VALUE;
+            rizz = "💀💀💀💀💀💀💀💀💀💀";
+            EmbedBuilder.addField("Rizz Score", "Infinity Ꝏ", true);
+            EmbedBuilder.addField("Rizz meter", rizz, true);
+            EmbedBuilder.addField("Conclusion", this.getConclusion(score), false);
+            event.getChannel().sendMessageEmbeds(EmbedBuilder.build()).queue();
+            return;
+        }
+
+
         EmbedBuilder.addField("Rizz Score", score + "/100", true);
         EmbedBuilder.addField("Rizz meter", rizz, true);
-
         EmbedBuilder.addField("Conclusion", this.getConclusion(score), false);
 
 
@@ -70,6 +82,7 @@ public class RizzTest extends Command{
     }
 
     private @Nonnull String getConclusion(int value){
+        if(value > 100) return "Rizz incarnate.";
         if(value > 90) return "On a scale of 1 to 10, I would rate you as a 9 and that is just because I am the one you are missing.";
         if(value > 80) return "So, aside from taking my breath away, what do you do for a living?";
         if(value > 70) return "I ought to complain to Spotify for you not being named this week’s hottest single.";
