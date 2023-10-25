@@ -63,18 +63,18 @@ public class RizzTest extends Command{
 
         if(user.getId().equals(UserReference.MAPLE.getId())){
             score = Integer.MAX_VALUE;
-            rizz = "💀💀💀💀💀💀💀💀💀💀";
-            EmbedBuilder.addField("Rizz Score", "Infinity Ꝏ", true);
+            rizz = "💖💖💖💖💖";
+            EmbedBuilder.addField("Rizz Score", "`" + "Infinity Ꝏ" + "`", true);
             EmbedBuilder.addField("Rizz meter", rizz, true);
-            EmbedBuilder.addField("Conclusion", this.getConclusion(score), false);
+            EmbedBuilder.addField("Conclusion", "`" + this.getConclusion(score) + "`", false);
             event.getChannel().sendMessageEmbeds(EmbedBuilder.build()).queue();
             return;
         }
 
 
-        EmbedBuilder.addField("Rizz Score", score + "/100", true);
+        EmbedBuilder.addField("Rizz Score", "`" + score + "/100" + "`", true);
         EmbedBuilder.addField("Rizz meter", rizz, true);
-        EmbedBuilder.addField("Conclusion", this.getConclusion(score), false);
+        EmbedBuilder.addField("Conclusion", "`" + this.getConclusion(score) + "`", false);
 
 
 
@@ -91,6 +91,7 @@ public class RizzTest extends Command{
         if(value > 40) return "Do you have a map? I just got lost in your eyes.";
         if(value > 30) return "You know what you would look really beautiful in? My arms.";
         if(value > 20) return "I think there’s something wrong with my phone. Could you try calling it to see if it works?";
+        if(value < 0) return "Anti-Rizz incarnate.";
         
         return "hi, i am rizz please love me.";
     }
