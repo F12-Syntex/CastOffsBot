@@ -61,10 +61,10 @@ public class RizzTest extends Command{
         }
 
 
-        if(user.getId().equals(UserReference.MAPLE.getId())){
+        if(user.getId().equals(UserReference.SYNTEX.getId())){
             score = Integer.MAX_VALUE;
             rizz = "💖💖💖💖💖";
-            EmbedBuilder.addField("Rizz Score", "`" + "Infinity Ꝏ" + "`", true);
+            EmbedBuilder.addField("Rizz Score", "`" + "Negative Infinity Ꝏ" + "`", true);
             EmbedBuilder.addField("Rizz meter", rizz, true);
             EmbedBuilder.addField("Conclusion", "`" + this.getConclusion(score) + "`", false);
             event.getChannel().sendMessageEmbeds(EmbedBuilder.build()).queue();

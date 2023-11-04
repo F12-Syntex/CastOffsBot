@@ -7,7 +7,8 @@ public enum Category {
     FUN("🎉"),
     INFO(":pencil:"),
     MODERATION("🔧"),
-    REACTIONS("🌸");
+    REACTIONS("🌸"),
+    JACKBOX("🎮");
 
     private @Nonnull String emoji;
 

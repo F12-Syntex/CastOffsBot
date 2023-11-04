@@ -11,7 +11,7 @@ public class Settings {
     public static final String VERSION = "v1.0.11";
     public static final String PREFIX = ";";
 
-    private final static boolean MAIN_BOT = true;
+    private final static boolean MAIN_BOT = false;
 
     public static String getEnvKeyForToken(){
         if(Settings.isDebugging()){
