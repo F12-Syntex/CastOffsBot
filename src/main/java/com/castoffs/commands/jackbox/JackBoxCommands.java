@@ -11,8 +11,11 @@ import net.dv8tion.jda.api.Permission;
 
 public abstract class JackBoxCommands extends Command{
 
-    public JackBoxCommands(Dependencies dependencies) {
+    protected String gameName;
+
+    public JackBoxCommands(Dependencies dependencies, String gameName) {
         super(dependencies);
+        this.gameName = gameName;
     }
 
     @Override
@@ -20,4 +23,8 @@ public abstract class JackBoxCommands extends Command{
         return this.defaultCommandPermissions();
     }
     
+    public String getGameName(){
+        return this.gameName;
+    }
+
 }

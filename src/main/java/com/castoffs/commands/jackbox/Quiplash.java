@@ -15,14 +15,15 @@ import com.castoffs.handler.Dependencies;
 public class Quiplash extends JackBoxCommands{
 
     public Quiplash(Dependencies dependencies) {
-        super(dependencies);
+        super(dependencies, "Quiplash");
     }
 
     @Override
     public void onCommandRecieved(CommandRecivedEvent event) {
-        
-        System.out.println("Quiplash");
-
+        Lobby lobby = new Lobby(this, event.getGuildChannel().asTextChannel(), event.getAuthor(), 8);
+        lobby.queue();
     }
+
+    
     
 }

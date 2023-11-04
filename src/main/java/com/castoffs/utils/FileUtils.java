@@ -58,5 +58,15 @@ public class FileUtils {
         }
     }
 
+    public static File locateFile(File parentFolder, String fileName){
+        for(File file : parentFolder.listFiles()){
+            if(file.getName().startsWith(fileName)){
+                return file;
+            }
+        }
+        return null;
+
+    }
+
 
 }
