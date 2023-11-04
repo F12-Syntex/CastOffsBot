@@ -45,8 +45,11 @@ public class Lobby extends ListenerAdapter{
     private Message lobbyMessage;
 
     private final int MAX_PLAYERS;
+    private final int MIN_PLAYERS;
 
-    public Lobby(JackBoxCommands jackbox, TextChannel channel, User owner, int maxPlayers){
+    private LobbyReady lobbyReady;
+
+    public Lobby(JackBoxCommands jackbox, TextChannel channel, User owner, int maxPlayers, int minPlayers){
         this.channel = channel;
         this.owner = owner;
         this.gameCode = UUID.randomUUID().toString().substring(0, 6);
@@ -56,6 +59,7 @@ public class Lobby extends ListenerAdapter{
         Castoffs.getInstance().getDiscord().addEventListener(this);
 
         this.MAX_PLAYERS = maxPlayers;
+        this.MIN_PLAYERS = minPlayers;
     }
 
     public void addPlayer(User player){
@@ -66,6 +70,10 @@ public class Lobby extends ListenerAdapter{
     public void queue(){
         this.players.add(owner);
         this.renderLobby();
+    }
+
+    public void onLobbyReady(LobbyReady lobbyReady){
+        this.lobbyReady = lobbyReady;
     }
 
     private void renderLobby(){
@@ -226,6 +234,7 @@ public class Lobby extends ListenerAdapter{
         return null;
     }
 
+    @SuppressWarnings("null")
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event){
 
@@ -272,6 +281,35 @@ public class Lobby extends ListenerAdapter{
             embed.setFooter("gamecode: " + this.gameCode + " | players: " + this.players.size() + "/" + MAX_PLAYERS, null);
             event.replyEmbeds(embed.build()).setEphemeral(true).queue();
         }
+
+        if(action.equals("start")){
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle("JackBox - " + this.jackbox.getGameName());
+            embed.setTimestamp(Instant.now());
+
+            if(!this.owner.getId().equals(event.getMember().getId())){
+                embed.setColor(Color.red);
+                embed.setDescription("Only the " + owner.getAsMention() + " can start the game!");
+                event.replyEmbeds(embed.build()).setEphemeral(true).queue();
+                return;
+            }
+
+            if(this.players.size() < MIN_PLAYERS){
+                embed.setColor(Color.red);
+                embed.setDescription("You need atleast " + MIN_PLAYERS + " players to start this game!");
+                event.replyEmbeds(embed.build()).setEphemeral(true).queue();
+                return;
+            }
+
+            embed.setColor(Color.green);
+            embed.setDescription("Starting the game!");
+            event.replyEmbeds(embed.build()).setEphemeral(true).queue();
+
+            this.lobbyReady.onLobbyReady(this);
+        }
+
+
 
     }
 

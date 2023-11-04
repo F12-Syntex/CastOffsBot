@@ -20,8 +20,14 @@ public class Quiplash extends JackBoxCommands{
 
     @Override
     public void onCommandRecieved(CommandRecivedEvent event) {
-        Lobby lobby = new Lobby(this, event.getGuildChannel().asTextChannel(), event.getAuthor(), 8);
-        lobby.queue();
+        Lobby queuedLobby = new Lobby(this, event.getGuildChannel().asTextChannel(), event.getAuthor(), 8, 1);
+        queuedLobby.queue();
+
+        queuedLobby.onLobbyReady(this::startGame);
+    }
+
+    public void startGame(Lobby lobby){
+
     }
 
     
