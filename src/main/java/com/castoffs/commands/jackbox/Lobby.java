@@ -102,9 +102,11 @@ public class Lobby extends ListenerAdapter{
             
             FileUpload data = FileUpload.fromData(finalLobbyImage, gameCode + ".png");
 
+            boolean enoughPlayers = this.players.size() >= MIN_PLAYERS;
+
             Button[] buttons = {
                 Button.of(ButtonStyle.PRIMARY, this.gameCode + ":join", "Join", Emoji.fromUnicode("U+25B6")),
-                Button.of(ButtonStyle.SECONDARY, this.gameCode + ":start", "Start")
+                Button.of(ButtonStyle.SECONDARY, this.gameCode + ":start", "Start").withDisabled(!enoughPlayers)
             };
 
             if(this.lobbyMessage == null){
@@ -207,7 +209,6 @@ public class Lobby extends ListenerAdapter{
 
             //render background
             File background = this.assets.getBackground();
-            System.out.println(background + " " + background.exists());
             if(background != null){
                 BufferedImage backgroundImg = ImageIO.read(background);
                 graphics.drawImage(backgroundImg, 0, 0, width, height, null);
@@ -295,24 +296,50 @@ public class Lobby extends ListenerAdapter{
                 return;
             }
 
-            if(this.players.size() < MIN_PLAYERS){
-                embed.setColor(Color.red);
-                embed.setDescription("You need atleast " + MIN_PLAYERS + " players to start this game!");
-                event.replyEmbeds(embed.build()).setEphemeral(true).queue();
-                return;
-            }
-
-            embed.setColor(Color.green);
-            embed.setDescription("Starting the game!");
-            event.replyEmbeds(embed.build()).setEphemeral(true).queue();
-
+            event.deferEdit().queue();
             this.lobbyReady.onLobbyReady(this);
         }
 
-
-
     }
 
+    public Message getLobbyMessage(){
+        return this.lobbyMessage;
+    }
 
-    
+    public JackBoxCommands getJackBox(){
+        return this.jackbox;
+    }
+
+    public String getGameCode(){
+        return this.gameCode;
+    }
+
+    public User getOwner(){
+        return this.owner;
+    }
+
+    public List<User> getPlayers(){
+        return this.players;
+    }
+
+    public TextChannel getChannel(){
+        return this.channel;
+    }
+
+    public interface LobbyReady{
+        void onLobbyReady(Lobby lobby);
+    }
+
+    public JackBoxAssets getAssets(){
+        return this.assets;
+    }    
+
+    public int getMinPlayers(){
+        return this.MIN_PLAYERS;
+    }
+
+    public int getMaxPlayers(){
+        return this.MAX_PLAYERS;
+    }
+
 }

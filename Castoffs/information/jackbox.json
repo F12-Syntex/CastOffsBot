@@ -1,0 +1,96 @@
+{
+  "quiplash": {
+    "questions": [
+      {
+        "question": "What\u0027s the best way to start your day?",
+        "answer": [
+          "A cup of coffee and a good book",
+          "A morning jog followed by a healthy breakfast",
+          "Watching funny cat videos",
+          "A long, relaxing shower"
+        ]
+      },
+      {
+        "question": "What\u0027s the secret to a happy life?",
+        "answer": [
+          "Eating lots of chocolate",
+          "Spending time with loved ones",
+          "Traveling and exploring new places",
+          "Dancing like nobody\u0027s watching"
+        ]
+      },
+      {
+        "question": "What\u0027s the most important quality in a friend?",
+        "answer": [
+          "Loyalty",
+          "Sense of humor",
+          "Honesty",
+          "Kindness"
+        ]
+      },
+      {
+        "question": "What\u0027s the best way to spend a lazy Sunday?",
+        "answer": [
+          "Binge-watching your favorite TV show",
+          "Taking a nap",
+          "Reading a good book",
+          "Having a picnic in the park"
+        ]
+      },
+      {
+        "question": "What\u0027s the worst superpower to have?",
+        "answer": [
+          "Super-sweating",
+          "Invisibility (but only when no one is looking)",
+          "Being able to talk to plants",
+          "Extreme ticklishness"
+        ]
+      },
+      {
+        "question": "What\u0027s the best thing about being a kid?",
+        "answer": [
+          "No responsibilities",
+          "Playing games all day",
+          "Getting lots of hugs",
+          "Imagination"
+        ]
+      },
+      {
+        "question": "What\u0027s the most important meal of the day?",
+        "answer": [
+          "Breakfast",
+          "Lunch",
+          "Dinner",
+          "All meals are equally important!"
+        ]
+      },
+      {
+        "question": "What\u0027s the best way to relax after a long day?",
+        "answer": [
+          "Taking a hot bath",
+          "Watching your favorite TV show",
+          "Listening to music",
+          "Meditating"
+        ]
+      },
+      {
+        "question": "What\u0027s the most underrated animal?",
+        "answer": [
+          "Sloth",
+          "Platypus",
+          "Axolotl",
+          "Quokka"
+        ]
+      },
+      {
+        "question": "What\u0027s the best way to spend a vacation?",
+        "answer": [
+          "Exploring a new city",
+          "Relaxing on a beach",
+          "Going on an adventure",
+          "Trying local cuisine"
+        ]
+      }
+    ]
+  }
+}

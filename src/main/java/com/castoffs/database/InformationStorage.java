@@ -2,6 +2,7 @@ package com.castoffs.database;
 
 import java.io.File;
 
+import com.castoffs.database.jackbox.JackBoxConfig;
 import com.castoffs.database.ship.ShipConfiguration;
 import com.castoffs.database.tod.TruthOrDareConfiguration;
 import com.castoffs.handler.Dependencies;
@@ -10,6 +11,7 @@ public class InformationStorage extends Storage{
 
     private TruthOrDareConfiguration truthOrDare;
     private ShipConfiguration ship;
+    private JackBoxConfig jackBoxConfig;
 
     public InformationStorage(File directory, Dependencies dependencies) {
         super(directory, dependencies);
@@ -22,6 +24,9 @@ public class InformationStorage extends Storage{
 
         this.ship = new ShipConfiguration(new File(directory, "ship.json"), dependencies);
         this.ship.startup();
+
+        this.jackBoxConfig = new JackBoxConfig(new File(directory, "jackbox.json"), dependencies);
+        this.jackBoxConfig.startup();
     }
 
     /*
